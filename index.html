@@ -8,334 +8,277 @@
   <title>NEVERLOSE ERA | Bot Hosting</title>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: Arial, sans-serif;
       background: #080b14;
       color: #fff;
       line-height: 1.6;
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
+    a { color: inherit; text-decoration: none; }
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(8, 11, 20, 0.94);
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(8,11,20,.94);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid #20283b;
     }
-
     nav {
-      max-width: 1150px;
-      margin: auto;
-      padding: 18px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
+      max-width: 1150px; margin: auto; padding: 18px 20px;
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 15px;
     }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-
-    .logo span {
-      color: #3987ff;
-    }
-
+    .logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
+    .logo span, h1 span { color: #3987ff; }
     .nav-links {
-      display: flex;
-      gap: 22px;
-      align-items: center;
-      font-size: 14px;
-      color: #c4ccdd;
+      display: flex; gap: 22px; align-items: center;
+      font-size: 14px; color: #c4ccdd;
     }
-
-    .nav-links a:hover {
-      color: #4b91ff;
-    }
-
+    .nav-links a:hover { color: #4b91ff; }
     .login-btn, .primary-btn {
-      background: #2878f5;
-      color: white;
-      border: none;
-      border-radius: 9px;
-      padding: 11px 18px;
-      font-weight: bold;
-      cursor: pointer;
+      background: #2878f5; color: white; border: none;
+      border-radius: 9px; padding: 11px 18px;
+      font-weight: bold; cursor: pointer;
     }
-
-    .login-btn:disabled {
-      opacity: 0.65;
-      cursor: wait;
-    }
-
+    .login-btn:disabled { opacity: .65; cursor: wait; }
     .hero {
-      max-width: 1150px;
-      margin: auto;
-      padding: 100px 20px 85px;
-      text-align: center;
+      max-width: 1150px; margin: auto;
+      padding: 100px 20px 85px; text-align: center;
     }
-
     .tag {
-      display: inline-block;
-      color: #7db2ff;
-      border: 1px solid #24477e;
-      background: #101e36;
-      padding: 7px 14px;
-      border-radius: 30px;
-      font-size: 13px;
-      margin-bottom: 24px;
+      display: inline-block; color: #7db2ff;
+      border: 1px solid #24477e; background: #101e36;
+      padding: 7px 14px; border-radius: 30px;
+      font-size: 13px; margin-bottom: 24px;
     }
-
-    h1 {
-      font-size: clamp(38px, 7vw, 70px);
-      line-height: 1.12;
-      font-weight: 900;
-    }
-
-    h1 span {
-      color: #3987ff;
-    }
-
+    h1 { font-size: clamp(38px,7vw,70px); line-height: 1.12; font-weight: 900; }
     .hero p {
-      max-width: 650px;
-      margin: 22px auto;
-      color: #aab4c8;
-      font-size: 17px;
+      max-width: 650px; margin: 22px auto;
+      color: #aab4c8; font-size: 17px;
     }
-
     .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 30px;
+      display: flex; justify-content: center; gap: 12px;
+      flex-wrap: wrap; margin-top: 30px;
     }
-
     .secondary-btn {
-      border: 1px solid #34415a;
-      padding: 11px 18px;
-      border-radius: 9px;
-      color: #d9e2f5;
+      border: 1px solid #34415a; padding: 11px 18px;
+      border-radius: 9px; color: #d9e2f5;
     }
-
-    .section {
-      max-width: 1150px;
-      margin: auto;
-      padding: 65px 20px;
-    }
-
-    .section-heading {
-      text-align: center;
-      margin-bottom: 38px;
-    }
-
-    .section-heading h2 {
-      font-size: 34px;
-    }
-
-    .section-heading p {
-      color: #9ba8bf;
-      margin-top: 8px;
-    }
-
+    .section { max-width: 1150px; margin: auto; padding: 65px 20px; }
+    .section-heading { text-align: center; margin-bottom: 38px; }
+    .section-heading h2 { font-size: 34px; }
+    .section-heading p { color: #9ba8bf; margin-top: 8px; }
     .features, .plans {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 18px;
     }
-
     .feature, .plan {
-      background: #101625;
-      border: 1px solid #222e44;
-      border-radius: 15px;
-      padding: 25px;
+      background: #101625; border: 1px solid #222e44;
+      border-radius: 15px; padding: 25px;
     }
-
-    .feature-icon {
-      font-size: 30px;
-      margin-bottom: 12px;
-    }
-
-    .feature p, .plan p {
-      color: #9ba8bf;
-      font-size: 14px;
-      margin-top: 8px;
-    }
-
-    .plan {
-      position: relative;
-    }
-
-    .plan h3 {
-      font-size: 21px;
-    }
-
-    .price {
-      font-size: 32px;
-      font-weight: 900;
-      margin: 18px 0;
-    }
-
-    .price small {
-      font-size: 13px;
-      color: #9ba8bf;
-      font-weight: normal;
-    }
-
-    .plan ul {
-      list-style: none;
-      margin: 18px 0;
-      color: #d0d8e8;
-      font-size: 14px;
-    }
-
-    .plan li {
-      padding: 7px 0;
-    }
-
-    .plan li::before {
-      content: "✓ ";
-      color: #4c9bff;
-      font-weight: bold;
-    }
-
+    .feature-icon { font-size: 30px; margin-bottom: 12px; }
+    .feature p, .plan p { color: #9ba8bf; font-size: 14px; margin-top: 8px; }
+    .plan { position: relative; }
+    .plan h3 { font-size: 21px; }
+    .price { font-size: 32px; font-weight: 900; margin: 18px 0; }
+    .price small { font-size: 13px; color: #9ba8bf; font-weight: normal; }
+    .plan ul { list-style: none; margin: 18px 0; color: #d0d8e8; font-size: 14px; }
+    .plan li { padding: 7px 0; }
+    .plan li::before { content: "✓ "; color: #4c9bff; font-weight: bold; }
     .plan button {
-      width: 100%;
-      padding: 12px;
-      background: #1c3154;
-      color: white;
-      border: 1px solid #3564a4;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
+      width: 100%; padding: 12px; background: #1c3154;
+      color: white; border: 1px solid #3564a4;
+      border-radius: 8px; font-weight: bold; cursor: pointer;
     }
-
-    .featured {
-      border-color: #3987ff;
-      box-shadow: 0 0 25px rgba(57, 135, 255, 0.12);
-    }
-
-    .featured button {
-      background: #2878f5;
-    }
-
+    .featured { border-color: #3987ff; box-shadow: 0 0 25px rgba(57,135,255,.12); }
+    .featured button { background: #2878f5; }
     .trial {
-      display: inline-block;
-      background: #142b24;
-      color: #76e4ae;
-      border-radius: 5px;
-      padding: 4px 9px;
-      font-size: 12px;
-      margin-bottom: 12px;
+      display: inline-block; background: #142b24; color: #76e4ae;
+      border-radius: 5px; padding: 4px 9px; font-size: 12px; margin-bottom: 12px;
     }
-
     .ai-box {
-      text-align: center;
-      background: linear-gradient(135deg, #101d35, #111426);
-      border: 1px solid #294a7c;
-      border-radius: 18px;
-      padding: 40px 20px;
+      text-align: center; background: linear-gradient(135deg,#101d35,#111426);
+      border: 1px solid #294a7c; border-radius: 18px; padding: 40px 20px;
     }
-
-    .ai-box h2 {
-      font-size: 30px;
-    }
-
-    .ai-box p {
-      max-width: 650px;
-      margin: 12px auto 22px;
-      color: #aab4c8;
-    }
-
+    .ai-box h2 { font-size: 30px; }
+    .ai-box p { max-width: 650px; margin: 12px auto 22px; color: #aab4c8; }
     footer {
-      border-top: 1px solid #20283b;
-      padding: 30px 20px;
-      text-align: center;
-      color: #8995aa;
-      font-size: 13px;
+      border-top: 1px solid #20283b; padding: 30px 20px;
+      text-align: center; color: #8995aa; font-size: 13px;
     }
 
-    @media (max-width: 750px) {
-      .nav-links {
-        gap: 12px;
-        font-size: 12px;
-      }
-
-      .features, .plans {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding-top: 75px;
-      }
-
-      .logo {
-        font-size: 16px;
-      }
-
-      .login-btn {
-        padding: 9px 11px;
-        font-size: 12px;
-      }
+    /* Customer dashboard */
+    #dashboard[hidden] { display: none !important; }
+    .dashboard-welcome,.dash-panel,.dash-card,.hosting-notice {
+      background: #101625; border: 1px solid #222e44; border-radius: 15px;
     }
+    .dashboard-welcome {
+      padding: 24px; display: flex; justify-content: space-between;
+      align-items: center; gap: 18px; margin-bottom: 18px;
+    }
+    .dashboard-kicker {
+      color: #65a5ff; font-size: 11px; letter-spacing: 2px; font-weight: 800;
+    }
+    .dashboard-welcome h2 { font-size: 27px; margin: 5px 0; }
+    .dashboard-welcome p,.panel-heading p,.muted-note,.file-note {
+      color: #9ba8bf; font-size: 13px;
+    }
+    .runtime-badge,.console-offline {
+      border: 1px solid #795a28; background: #2a2113;
+      color: #ffc66d; border-radius: 20px; padding: 7px 11px;
+      font-size: 10px; font-weight: 800; text-align: center;
+    }
+    .dashboard-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 14px; margin-bottom: 18px;
+    }
+    .dash-card { padding: 18px; }
+    .dash-card span,.dash-card small {
+      display: block; color: #9ba8bf; font-size: 13px;
+    }
+    .dash-card strong { display: block; font-size: 29px; margin: 5px 0; }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .dash-panel { padding: 22px; margin-bottom: 18px; min-width: 0; }
+    .panel-heading {
+      display: flex; justify-content: space-between;
+      gap: 12px; align-items: flex-start; margin-bottom: 18px;
+    }
+    .panel-heading h3 { font-size: 19px; }
+    .panel-heading > span { color: #65a5ff; font-weight: 800; font-size: 12px; }
+    .upload-zone {
+      min-height: 155px; border: 1px dashed #42628e;
+      background: #0b1424; border-radius: 12px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 7px; cursor: pointer;
+      text-align: center; padding: 16px;
+    }
+    .upload-zone:hover { border-color: #3987ff; background: #101d35; }
+    .upload-icon { color: #65a5ff; font-size: 32px; }
+    .upload-zone small { color: #9ba8bf; font-size: 11px; }
+    .file-note { margin: 10px 0; overflow-wrap: anywhere; }
+    .full-btn { width: 100%; margin-top: 5px; }
+    .primary-btn:disabled { opacity: .55; cursor: not-allowed; }
+    .muted-note { margin-top: 10px; line-height: 1.5; }
+    .empty-bots {
+      min-height: 155px; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; color: #9ba8bf;
+    }
+    .empty-bots span { font-size: 34px; margin-bottom: 8px; }
+    .empty-bots strong { color: #fff; }
+    .empty-bots p { max-width: 330px; font-size: 12px; margin-top: 6px; }
+    .console-output {
+      white-space: pre-wrap; overflow-wrap: anywhere;
+      background: #080d17; border: 1px solid #1e2b40;
+      border-radius: 10px; color: #9ec5ff; padding: 16px;
+      font: 12px/1.8 monospace;
+    }
+    .hosting-notice { padding: 18px 20px; border-color: #294a7c; }
+    .hosting-notice strong { color: #8dbbff; }
+    .hosting-notice p { color: #aab4c8; font-size: 13px; margin-top: 6px; line-height: 1.6; }
 
-    @media (max-width: 420px) {
-      .nav-links a:nth-child(2) {
-        display: none;
-      }
+    @media(max-width:750px) {
+      .nav-links { gap: 12px; font-size: 12px; }
+      .features,.plans { grid-template-columns: 1fr; }
+      .hero { padding-top: 75px; }
+      .logo { font-size: 16px; }
+      .login-btn { padding: 9px 11px; font-size: 12px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .dashboard-stats { grid-template-columns: 1fr 1fr; }
+      .dashboard-welcome { align-items: flex-start; flex-direction: column; }
+    }
+    @media(max-width:420px) {
+      .nav-links a:nth-child(2) { display: none; }
+      .dashboard-stats { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-
 <header>
   <nav>
     <a href="#" class="logo">NEVERLOSE <span>ERA</span></a>
-
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#plans">Plans</a>
-      <button class="login-btn" id="loginBtn" type="button">
-        Login with Google
-      </button>
+      <a href="#dashboard" id="dashboardNav" hidden>Dashboard</a>
+      <button class="login-btn" id="loginBtn" type="button">Login with Google</button>
     </div>
   </nav>
 </header>
 
 <main>
+  <section class="section" id="dashboard" hidden>
+    <div class="section-heading">
+      <h2>Your Hosting Dashboard</h2>
+      <p>Manage your NEVERLOSE ERA projects from one place.</p>
+    </div>
+
+    <div class="dashboard-welcome">
+      <div>
+        <span class="dashboard-kicker">CUSTOMER PANEL</span>
+        <h2 id="dashboardGreeting">Welcome back</h2>
+        <p id="dashboardEmail">Signed in with Google</p>
+      </div>
+      <span class="runtime-badge">HOSTING RUNTIME NOT CONNECTED</span>
+    </div>
+
+    <div class="dashboard-stats">
+      <div class="dash-card"><span>My Bots</span><strong>0</strong><small>No bots deployed yet</small></div>
+      <div class="dash-card"><span>Running</span><strong>0</strong><small>Runtime connection required</small></div>
+      <div class="dash-card"><span>Plan</span><strong>Free</strong><small>Demo account status</small></div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-panel">
+        <div class="panel-heading">
+          <div><h3>Deploy a bot</h3><p>Select a ZIP file to prepare your deployment.</p></div>
+          <span>01</span>
+        </div>
+        <label class="upload-zone" for="botZip">
+          <span class="upload-icon">⇧</span>
+          <strong>Choose bot ZIP</strong>
+          <small>ZIP files only · Max 25 MB for this preview</small>
+          <input id="botZip" type="file" accept=".zip,application/zip" hidden>
+        </label>
+        <p id="uploadFileName" class="file-note">No file selected.</p>
+        <button class="primary-btn full-btn" id="prepareDeployBtn" type="button" disabled>Hosting runtime not connected</button>
+        <p class="muted-note">File selection is only a local preview. Nothing is uploaded or executed yet.</p>
+      </div>
+
+      <div class="dash-panel">
+        <div class="panel-heading">
+          <div><h3>My bots</h3><p>Your deployed projects will appear here.</p></div>
+          <span>02</span>
+        </div>
+        <div class="empty-bots">
+          <span>🤖</span>
+          <strong>No bots deployed</strong>
+          <p>Connect a secure hosting backend to upload, start and manage customer bots.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-panel">
+      <div class="panel-heading">
+        <div><h3>Console</h3><p>Runtime logs will appear here after hosting is connected.</p></div>
+        <span class="console-offline">OFFLINE</span>
+      </div>
+      <pre class="console-output">[NEVERLOSE ERA] Customer dashboard loaded.
+[INFO] Google authentication: connected
+[WAIT] Bot runtime API: not configured
+[WAIT] Secure deployment service: not configured</pre>
+    </div>
+
+    <div class="hosting-notice">
+      <strong>Hosting setup still required</strong>
+      <p>Your login and dashboard are connected to Supabase. To actually run customer bots, NEVERLOSE ERA needs a separate server/runtime API with isolated containers, resource limits, secure token storage and deployment endpoints. Cloudflare Workers alone cannot keep Discord Gateway bots running continuously.</p>
+    </div>
+  </section>
+
   <section class="hero">
     <div class="tag">⚡ NEXT GENERATION BOT HOSTING</div>
-
-    <h1>
-      HOST YOUR BOTS.<br>
-      <span>NEVER STOP.</span>
-    </h1>
-
-    <p>
-      A new home for your Discord bots.
-      Explore hosting plans, manage your projects,
-      and build something powerful with NEVERLOSE ERA.
-    </p>
-
+    <h1>HOST YOUR BOTS.<br><span>NEVER STOP.</span></h1>
+    <p>A new home for your Discord bots. Explore hosting plans, manage your projects, and build something powerful with NEVERLOSE ERA.</p>
     <div class="hero-actions">
       <a href="#plans" class="primary-btn">Explore Plans</a>
       <a href="#features" class="secondary-btn">Discover Features</a>
@@ -347,20 +290,17 @@
       <h2>Why NEVERLOSE ERA?</h2>
       <p>Everything your bot hosting platform needs.</p>
     </div>
-
     <div class="features">
       <div class="feature">
         <div class="feature-icon">🚀</div>
         <h3>Fast Hosting</h3>
         <p>Designed for smooth bot deployment and management.</p>
       </div>
-
       <div class="feature">
         <div class="feature-icon">🛡️</div>
         <h3>Secure Accounts</h3>
         <p>Account protection and secure project management.</p>
       </div>
-
       <div class="feature">
         <div class="feature-icon">🤖</div>
         <h3>AI Error Assistant</h3>
@@ -374,87 +314,49 @@
       <h2>Choose Your Hosting</h2>
       <p>Start with a trial or choose a monthly plan.</p>
     </div>
-
     <div class="plans">
-
       <div class="plan">
         <div class="trial">30-DAY TRIAL</div>
         <h3>Free Trial</h3>
         <div class="price">₹0 <small>/ 30 days</small></div>
-        <ul>
-          <li>1 Discord bot</li>
-          <li>512 MB RAM</li>
-          <li>1 GB storage</li>
-          <li>Basic dashboard</li>
-        </ul>
+        <ul><li>1 Discord bot</li><li>512 MB RAM</li><li>1 GB storage</li><li>Basic dashboard</li></ul>
         <button onclick="planNotice('Free Trial')">Get Started</button>
       </div>
-
       <div class="plan featured">
         <div class="trial">POPULAR PLAN</div>
         <h3>Starter</h3>
         <div class="price">₹120 <small>/ 30 days</small></div>
-        <ul>
-          <li>1 Discord bot</li>
-          <li>1 GB RAM</li>
-          <li>3 GB storage</li>
-          <li>Hosting dashboard</li>
-        </ul>
+        <ul><li>1 Discord bot</li><li>1 GB RAM</li><li>3 GB storage</li><li>Hosting dashboard</li></ul>
         <button onclick="planNotice('Starter')">Choose Starter</button>
       </div>
-
       <div class="plan">
         <h3>Pro</h3>
         <div class="price">₹180 <small>/ 30 days</small></div>
-        <ul>
-          <li>2 Discord bots</li>
-          <li>2 GB RAM</li>
-          <li>5 GB storage</li>
-          <li>Hosting dashboard</li>
-        </ul>
+        <ul><li>2 Discord bots</li><li>2 GB RAM</li><li>5 GB storage</li><li>Hosting dashboard</li></ul>
         <button onclick="planNotice('Pro')">Choose Pro</button>
       </div>
-
       <div class="plan">
         <h3>Advanced</h3>
         <div class="price">₹260 <small>/ 30 days</small></div>
-        <ul>
-          <li>3 Discord bots</li>
-          <li>3 GB RAM</li>
-          <li>8 GB storage</li>
-          <li>Priority support</li>
-        </ul>
+        <ul><li>3 Discord bots</li><li>3 GB RAM</li><li>8 GB storage</li><li>Priority support</li></ul>
         <button onclick="planNotice('Advanced')">Choose Advanced</button>
       </div>
-
       <div class="plan">
         <h3>Ultimate</h3>
         <div class="price">₹480 <small>/ 30 days</small></div>
-        <ul>
-          <li>5 Discord bots</li>
-          <li>6 GB RAM</li>
-          <li>15 GB storage</li>
-          <li>Priority support</li>
-        </ul>
+        <ul><li>5 Discord bots</li><li>6 GB RAM</li><li>15 GB storage</li><li>Priority support</li></ul>
         <button onclick="planNotice('Ultimate')">Choose Ultimate</button>
       </div>
-
     </div>
-
     <p style="text-align:center;color:#8995aa;font-size:12px;margin-top:20px">
-      Plan prices and resources are proposed examples, not active offers.
-      Actual availability depends on server capacity.
+      Plan prices and resources are proposed examples, not active offers. Actual availability depends on server capacity.
     </p>
   </section>
 
   <section class="section">
     <div class="ai-box">
       <h2>🤖 NEVERLOSE AI FIXER</h2>
-      <p>
-        Our planned AI assistant will help identify console errors,
-        explain problems, and suggest code corrections.
-        Changes will require your approval.
-      </p>
+      <p>Our planned AI assistant will help identify console errors, explain problems, and suggest code corrections. Changes will require your approval.</p>
       <span class="tag">COMING SOON</span>
     </div>
   </section>
@@ -466,15 +368,10 @@
   <p>Built for the next generation of bot hosting.</p>
 </footer>
 
-<!-- Supabase JavaScript library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-  const SUPABASE_URL =
-    "https://tntpedvbxyhoutzxznlw.supabase.co";
-
-  const SUPABASE_KEY =
-    "sb_publishable_WPvtzp4Ji2A854bwY2adcQ_tHnL4ggE";
+  const SUPABASE_URL = "https://tntpedvbxyhoutzxznlw.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_WPvtzp4Ji2A854bwY2adcQ_tHnL4ggE";
 
   const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
@@ -483,23 +380,15 @@
 
   const loginBtn = document.getElementById("loginBtn");
 
-  // Google Login
   async function loginWithGoogle() {
     loginBtn.disabled = true;
     loginBtn.textContent = "Connecting...";
-
     try {
-      const { error } =
-        await supabaseClient.auth.signInWithOAuth({
-          provider: "google",
-          options: {
-            redirectTo: window.location.origin
-          }
-        });
-
-      if (error) {
-        throw error;
-      }
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin }
+      });
+      if (error) throw error;
     } catch (error) {
       alert("Google Login Error: " + error.message);
       loginBtn.disabled = false;
@@ -507,64 +396,88 @@
     }
   }
 
-  // Logout
   async function logout() {
     loginBtn.disabled = true;
-
     const { error } = await supabaseClient.auth.signOut();
-
-    if (error) {
-      alert("Logout Error: " + error.message);
-    }
-
+    if (error) alert("Logout Error: " + error.message);
     await updateLoginButton();
   }
 
-  // Update button according to login session
   async function updateLoginButton() {
-    const { data, error } =
-      await supabaseClient.auth.getSession();
-
+    const { data, error } = await supabaseClient.auth.getSession();
     if (error) {
       console.error("Session Error:", error.message);
       return;
     }
 
     const session = data.session;
+    const dashboardSection = document.getElementById("dashboard");
+    const dashboardNav = document.getElementById("dashboardNav");
 
     if (session) {
       loginBtn.textContent = "Logout";
       loginBtn.title = session.user.email || "Logged in";
       loginBtn.onclick = logout;
+      dashboardSection.hidden = false;
+      dashboardNav.hidden = false;
+      document.getElementById("dashboardEmail").textContent =
+        session.user.email || "Google account connected";
+
+      const displayName = session.user.user_metadata?.full_name ||
+        session.user.user_metadata?.name || "Welcome back";
+      document.getElementById("dashboardGreeting").textContent = displayName;
     } else {
       loginBtn.textContent = "Login with Google";
       loginBtn.title = "Login with Google";
       loginBtn.onclick = loginWithGoogle;
+      dashboardSection.hidden = true;
+      dashboardNav.hidden = true;
     }
-
     loginBtn.disabled = false;
   }
 
-  // Listen for login and logout changes
-  supabaseClient.auth.onAuthStateChange(
-    (event, session) => {
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-        updateLoginButton();
-      }
+  supabaseClient.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+      updateLoginButton();
     }
-  );
+  });
 
-  // Initial session check
   updateLoginButton();
 
-  // Hosting plan notices
+  // ZIP selection preview only. This does not upload or execute customer code.
+  const botZipInput = document.getElementById("botZip");
+  const uploadFileName = document.getElementById("uploadFileName");
+  const prepareDeployBtn = document.getElementById("prepareDeployBtn");
+
+  botZipInput.addEventListener("change", () => {
+    const file = botZipInput.files && botZipInput.files[0];
+    if (!file) {
+      uploadFileName.textContent = "No file selected.";
+      prepareDeployBtn.disabled = true;
+      return;
+    }
+
+    const isZip = file.name.toLowerCase().endsWith(".zip");
+    const underLimit = file.size <= 25 * 1024 * 1024;
+
+    if (!isZip || !underLimit) {
+      uploadFileName.textContent = !isZip
+        ? "Please choose a .zip file."
+        : "File is larger than the 25 MB preview limit.";
+      prepareDeployBtn.disabled = true;
+      botZipInput.value = "";
+      return;
+    }
+
+    uploadFileName.textContent =
+      file.name + " · " + (file.size / (1024 * 1024)).toFixed(2) + " MB selected";
+    prepareDeployBtn.disabled = true;
+    prepareDeployBtn.textContent = "Hosting runtime not connected";
+  });
+
   function planNotice(plan) {
-    alert(
-      plan +
-      " selected! Account registration and hosting checkout are coming soon."
-    );
+    alert(plan + " selected! Account registration and hosting checkout are coming soon.");
   }
 </script>
-
 </body>
 </html>
