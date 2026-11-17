@@ -6,17 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b14">
 <title>NEVERLOSE ERA | Bot Hosting</title>
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#080b14;color:white;line-height:1.6}
 a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
 header{position:sticky;top:0;z-index:10;background:#080b14;border-bottom:1px solid #20283b}
-nav{max-width:1150px;margin:auto;padding:17px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+nav{max-width:1200px;margin:auto;padding:17px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{font-size:19px;font-weight:900;letter-spacing:1px}
 .logo span,h1 span{color:#3987ff}
 .nav-links{display:flex;gap:17px;align-items:center;font-size:13px;color:#c4ccdd}
-button{cursor:pointer}
 .login-btn,.primary-btn{background:#2878f5;color:white;border:0;border-radius:9px;padding:11px 17px;font-weight:bold}
 .login-btn:disabled,.primary-btn:disabled{opacity:.55;cursor:not-allowed}
 .hero{max-width:1150px;margin:auto;padding:90px 20px;text-align:center}
@@ -24,13 +23,13 @@ button{cursor:pointer}
 h1{font-size:clamp(38px,7vw,68px);line-height:1.12}
 .hero p{max-width:650px;margin:20px auto;color:#aab4c8;font-size:16px}
 .hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px}
-.secondary-btn{border:1px solid #34415a;padding:10px 17px;border-radius:9px;color:#d9e2f5}
-.section{max-width:1150px;margin:auto;padding:55px 20px}
+.secondary-btn{border:1px solid #34415a;padding:10px 17px;border-radius:9px;color:#d9e2f5;background:transparent}
+.section{max-width:1200px;margin:auto;padding:55px 20px}
 .section-heading{text-align:center;margin-bottom:32px}
 .section-heading h2{font-size:32px}
 .section-heading p{color:#9ba8bf;margin-top:7px}
 .features,.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
-.feature,.plan,.dash-panel,.dash-card,.welcome,.notice{background:#101625;border:1px solid #222e44;border-radius:14px;padding:22px}
+.feature,.plan,.dash-panel,.dash-card,.notice{background:#101625;border:1px solid #222e44;border-radius:14px;padding:22px}
 .feature-icon{font-size:29px}
 .feature p,.plan p{color:#9ba8bf;font-size:13px;margin-top:7px}
 .plan h3{font-size:21px}
@@ -47,44 +46,71 @@ h1{font-size:clamp(38px,7vw,68px);line-height:1.12}
 .ai-box p{max-width:650px;margin:12px auto;color:#aab4c8}
 footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8995aa;font-size:13px}
 #dashboard[hidden]{display:none!important}
-.welcome{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px}
-.welcome h2{font-size:25px}
-.welcome p,.muted{color:#9ba8bf;font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:17px}
+.muted{color:#9ba8bf;font-size:13px}
+.panel-shell{display:grid;grid-template-columns:215px minmax(0,1fr);gap:17px;align-items:start}
+.panel-sidebar,.panel-main{background:#0d1422;border:1px solid #222e44;border-radius:14px;padding:16px}
+.panel-sidebar{position:sticky;top:85px;min-height:520px}
+.panel-brand{font-weight:900;letter-spacing:1px;padding:8px 9px 20px;border-bottom:1px solid #253149;margin-bottom:12px}
+.panel-brand span{color:#3987ff}
+.panel-brand small{display:block;color:#8292ad;font-size:9px;letter-spacing:2px}
+.side-link{display:block;width:100%;text-align:left;background:transparent;border:0;color:#aebbd0;padding:12px 10px;border-radius:8px;margin:3px 0;font-weight:600}
+.side-link:hover,.side-link.active{background:#172b4a;color:#fff}
+.sidebar-foot{font-size:11px;color:#8392aa;border-top:1px solid #253149;margin-top:25px;padding:14px 8px}
+.panel-main{min-width:0}
+.panel-topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
+.panel-topbar h2{font-size:24px}
+.panel-topbar p{overflow-wrap:anywhere}
+.status{font-size:10px;color:#ffc66d;border:1px solid #795a28;background:#2a2113;padding:5px 9px;border-radius:20px;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:17px}
+.dash-card{padding:17px}
 .dash-card strong{display:block;font-size:28px}
 .dash-card span,.dash-card small{color:#9ba8bf;font-size:12px}
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.panel-view[hidden]{display:none!important}
 .panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
 .panel-heading p{font-size:12px;color:#9ba8bf}
 .panel-heading h3{font-size:18px}
-.status{font-size:10px;color:#ffc66d;border:1px solid #795a28;background:#2a2113;padding:5px 9px;border-radius:20px}
+.language-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 16px}
+.language-choice{display:flex;gap:10px;align-items:center;padding:13px;background:#0b1424;border:1px solid #2a3a55;border-radius:10px;cursor:pointer}
+.language-choice:has(input:checked){border-color:#3987ff;background:#112442}
+.language-choice input{accent-color:#3987ff}
+.language-choice b,.language-choice small{display:block}
+.language-choice small{font-size:11px;color:#9ba8bf}
 .upload-zone{display:flex;min-height:145px;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:7px;border:1px dashed #42628e;background:#0b1424;border-radius:11px;padding:15px;cursor:pointer}
 .upload-zone:hover{border-color:#3987ff}
 .upload-zone span{font-size:30px;color:#65a5ff}
 .upload-zone small{font-size:11px;color:#9ba8bf}
 .file-note{font-size:12px;color:#9ba8bf;margin:10px 0;overflow-wrap:anywhere}
 .full-btn{width:100%;margin-top:7px}
-.bot-item{background:#0b1424;border:1px solid #26354d;border-radius:9px;padding:13px;margin:9px 0;overflow-wrap:anywhere}
-.bot-item strong{display:block}
-.bot-item small{color:#9ba8bf}
+.bot-item{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0b1424;border:1px solid #26354d;border-radius:9px;padding:13px;margin:9px 0;overflow-wrap:anywhere}
+.bot-meta{min-width:0}
+.bot-meta small{display:block;color:#9ba8bf}
 .empty{text-align:center;padding:30px 10px;color:#9ba8bf}
 .empty strong{display:block;color:white}
 .console{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d17;border:1px solid #1e2b40;border-radius:9px;padding:14px;color:#9ec5ff;font:12px/1.8 monospace}
 .notice{border-color:#294a7c;margin-top:17px}
 .notice strong{color:#8dbbff}
 .notice p{color:#aab4c8;font-size:12px;margin-top:6px}
+.info-card{background:#0b1424;border:1px solid #26354d;border-radius:10px;padding:17px;margin-top:12px}
+@media(max-width:900px){
+.panel-shell{grid-template-columns:1fr}
+.panel-sidebar{position:static;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.panel-brand,.sidebar-foot{grid-column:1/-1}
+.stats{grid-template-columns:1fr 1fr}
+}
 @media(max-width:750px){
 .features,.plans{grid-template-columns:1fr}
-.dash-grid{grid-template-columns:1fr}
-.stats{grid-template-columns:1fr 1fr}
-.welcome{align-items:flex-start;flex-direction:column}
 .nav-links{gap:9px;font-size:11px}
 .logo{font-size:15px}
+.panel-topbar{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:520px){
+.language-options{grid-template-columns:1fr}
+.panel-sidebar{grid-template-columns:1fr 1fr}
+.side-link{font-size:12px;padding:10px 7px}
 }
 @media(max-width:420px){.stats{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
 <header>
 <nav>
@@ -99,45 +125,58 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 </header>
 
 <main>
-
 <section class="section" id="dashboard" hidden>
 <div class="section-heading">
-<h2>Customer Dashboard</h2>
-<p>Manage your Discord bots in one place.</p>
+<h2>NEVERLOSE ERA Control Panel</h2>
+<p>Your bots, files and hosting activity in one place.</p>
 </div>
 
-<div class="welcome">
+<div class="panel-shell">
+<aside class="panel-sidebar">
+<div class="panel-brand">NEVERLOSE <span>ERA</span><small>CONTROL PANEL</small></div>
+<button class="side-link active" data-panel="overview">▦ &nbsp; Overview</button>
+<button class="side-link" data-panel="deployments">▣ &nbsp; Deployments</button>
+<button class="side-link" data-panel="files">▤ &nbsp; Files & Uploads</button>
+<button class="side-link" data-panel="console">⌘ &nbsp; Console</button>
+<button class="side-link" data-panel="variables">⚙ &nbsp; Variables</button>
+<button class="side-link" data-panel="backups">◷ &nbsp; Backups</button>
+<button class="side-link" data-panel="settings">☷ &nbsp; Settings</button>
+<div class="sidebar-foot">Runtime connection pending</div>
+</aside>
+
+<div class="panel-main">
+<div class="panel-topbar">
 <div>
-<span class="tag">CUSTOMER PANEL</span>
+<span class="muted">CUSTOMER PANEL</span>
 <h2 id="dashboardGreeting">Welcome back!</h2>
-<p id="dashboardEmail"></p>
+<p id="dashboardEmail" class="muted"></p>
 </div>
-<span class="status">HOSTING RUNTIME NOT CONNECTED</span>
+<span class="status">RUNTIME NOT CONNECTED</span>
 </div>
 
+<div class="panel-view" id="view-overview">
 <div class="stats">
-<div class="dash-card">
-<span>My Bots</span>
-<strong id="botCount">0</strong>
-<small>Uploaded bot records</small>
-</div>
-<div class="dash-card">
-<span>Running</span>
-<strong>0</strong>
-<small>Runtime not connected</small>
-</div>
-<div class="dash-card">
-<span>Plan</span>
-<strong>Free</strong>
-<small>Demo account</small>
-</div>
+<div class="dash-card"><span>Total deployments</span><strong id="botCount">0</strong><small>Your uploaded projects</small></div>
+<div class="dash-card"><span>Running</span><strong>0</strong><small>Runtime not connected</small></div>
+<div class="dash-card"><span>Account plan</span><strong>Free</strong><small>Demo account</small></div>
+<div class="dash-card"><span>Runtime usage</span><strong>—</strong><small>Not connected</small></div>
 </div>
 
-<div class="dash-grid">
 <div class="dash-panel">
 <div class="panel-heading">
-<div><h3>Upload Your Bot</h3><p>Select your Discord bot ZIP.</p></div>
+<div><h3>Quick deploy</h3><p>Create a new bot deployment.</p></div>
 <span>01</span>
+</div>
+
+<div class="language-options">
+<label class="language-choice">
+<input type="radio" name="botRuntime" value="nodejs" checked>
+<span><b>🟨 JavaScript</b><small>Node.js · discord.js</small></span>
+</label>
+<label class="language-choice">
+<input type="radio" name="botRuntime" value="python">
+<span><b>🐍 Python</b><small>Python · discord.py</small></span>
+</label>
 </div>
 
 <label class="upload-zone" for="botZip">
@@ -146,41 +185,76 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 <small>ZIP only · Maximum 25 MB</small>
 <input id="botZip" type="file" accept=".zip,application/zip" hidden>
 </label>
-
 <p id="uploadFileName" class="file-note">No file selected.</p>
-<button class="primary-btn full-btn" id="uploadBtn" disabled>Upload ZIP</button>
-<p class="muted" style="margin-top:10px">Files are saved in your private Supabase storage folder.</p>
-</div>
-
-<div class="dash-panel">
-<div class="panel-heading">
-<div><h3>My Bots</h3><p>Your uploaded projects.</p></div>
-<span>02</span>
-</div>
-<div id="botList">
-<div class="empty"><strong>No bots uploaded</strong>Your uploaded bots will appear here.</div>
-</div>
-</div>
+<button class="primary-btn full-btn" id="uploadBtn" disabled>Upload deployment</button>
+<p class="muted" style="margin-top:10px">Your archive is stored in your private account storage. Execution is not enabled yet.</p>
 </div>
 
 <div class="dash-panel" style="margin-top:17px">
 <div class="panel-heading">
-<div><h3>Console</h3><p>Hosting runtime information.</p></div>
-<span class="status">OFFLINE</span>
+<div><h3>Recent deployments</h3><p>Your latest bot projects.</p></div>
+<button class="secondary-btn" data-go="deployments">View all</button>
 </div>
+<div id="recentBots"><div class="empty">Your deployments will appear here.</div></div>
+</div>
+</div>
+
+<div class="panel-view" id="view-deployments" hidden>
+<div class="dash-panel">
+<div class="panel-heading"><div><h3>Deployments</h3><p>All your uploaded bot projects.</p></div></div>
+<div id="botList"><div class="empty"><strong>No deployments yet</strong>Upload a ZIP from Overview to get started.</div></div>
+</div>
+</div>
+
+<div class="panel-view" id="view-files" hidden>
+<div class="dash-panel">
+<h3>Files & Uploads</h3>
+<p class="muted">Your project ZIP archives are stored in your private Supabase bucket.</p>
+<div class="info-card">File browsing, editing and extraction will be connected with the hosting runtime.</div>
+</div>
+</div>
+
+<div class="panel-view" id="view-console" hidden>
+<div class="dash-panel">
+<div class="panel-heading"><div><h3>Console</h3><p>Runtime output and diagnostics.</p></div><span class="status">OFFLINE</span></div>
 <pre class="console" id="consoleOutput">[NEVERLOSE ERA] Dashboard loaded.
 [INFO] Google authentication connected.
 [INFO] Private storage configured.
 [WAIT] Bot execution runtime not connected.</pre>
 </div>
+</div>
+
+<div class="panel-view" id="view-variables" hidden>
+<div class="dash-panel">
+<h3>Environment variables</h3>
+<p class="muted">Secure server-side secret storage will be connected before bot tokens can be added.</p>
+<div class="info-card">Never put Discord bot tokens inside uploaded ZIP files, browser JavaScript or public database fields.</div>
+</div>
+</div>
+
+<div class="panel-view" id="view-backups" hidden>
+<div class="dash-panel">
+<h3>Backups</h3>
+<p class="muted">Backup creation and restore will be available after runtime integration.</p>
+</div>
+</div>
+
+<div class="panel-view" id="view-settings" hidden>
+<div class="dash-panel">
+<h3>Deployment settings</h3>
+<p class="muted">Choose JavaScript (Node.js) or Python when creating a deployment. Startup-file configuration will be added with runtime integration.</p>
+</div>
+</div>
 
 <div class="notice">
 <strong>Hosting setup in progress</strong>
-<p>ZIP upload and bot records are supported by this update. A separate secure hosting server is still needed to execute customer bot code. Uploading a ZIP does not start a bot.</p>
+<p>Dashboard navigation, language selection, ZIP uploads and database records are supported. Running customer code, live console streaming, process controls and resource monitoring require a separate secure hosting runtime.</p>
+</div>
+</div>
 </div>
 </section>
 
-<section class="hero">
+<section class="hero" id="home">
 <div class="tag">⚡ NEXT GENERATION BOT HOSTING</div>
 <h1>HOST YOUR BOTS.<br><span>NEVER STOP.</span></h1>
 <p>A new home for your Discord bots. Explore hosting plans, manage your projects and build something powerful with NEVERLOSE ERA.</p>
@@ -191,10 +265,7 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 </section>
 
 <section class="section" id="features">
-<div class="section-heading">
-<h2>Why NEVERLOSE ERA?</h2>
-<p>Everything your bot hosting platform needs.</p>
-</div>
+<div class="section-heading"><h2>Why NEVERLOSE ERA?</h2><p>Everything your bot hosting platform needs.</p></div>
 <div class="features">
 <div class="feature"><div class="feature-icon">🚀</div><h3>Fast Hosting</h3><p>Designed for smooth bot deployment and management.</p></div>
 <div class="feature"><div class="feature-icon">🛡️</div><h3>Secure Accounts</h3><p>Customer accounts and private project storage.</p></div>
@@ -203,10 +274,7 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 </section>
 
 <section class="section" id="plans">
-<div class="section-heading">
-<h2>Choose Your Hosting</h2>
-<p>Explore the proposed plans.</p>
-</div>
+<div class="section-heading"><h2>Choose Your Hosting</h2><p>Explore the proposed plans.</p></div>
 <div class="plans">
 <div class="plan"><div class="trial">30-DAY TRIAL</div><h3>Free Trial</h3><div class="price">₹0 <small>/ 30 days</small></div><ul><li>1 Discord bot</li><li>512 MB RAM</li><li>1 GB storage</li><li>Basic dashboard</li></ul><button onclick="planNotice('Free Trial')">Get Started</button></div>
 <div class="plan featured"><div class="trial">POPULAR PLAN</div><h3>Starter</h3><div class="price">₹120 <small>/ 30 days</small></div><ul><li>1 Discord bot</li><li>1 GB RAM</li><li>3 GB storage</li><li>Hosting dashboard</li></ul><button onclick="planNotice('Starter')">Choose Starter</button></div>
@@ -224,7 +292,6 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 <span class="tag">COMING SOON</span>
 </div>
 </section>
-
 </main>
 
 <footer>
@@ -233,257 +300,145 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 const SUPABASE_URL = "https://tntpedvbxyhoutzxznlw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_WPvtzp4Ji2A854bwY2adcQ_tHnL4ggE";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
+const supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const loginBtn = document.getElementById("loginBtn");
 const dashboard = document.getElementById("dashboard");
 const dashboardNav = document.getElementById("dashboardNav");
 
-async function loginWithGoogle() {
-  loginBtn.disabled = true;
-  loginBtn.textContent = "Connecting...";
-
-  try {
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin }
-    });
-    if (error) throw error;
-  } catch (error) {
-    alert("Google login error: " + error.message);
-    loginBtn.disabled = false;
-    loginBtn.textContent = "Login with Google";
-  }
+async function loginWithGoogle(){
+ loginBtn.disabled=true;
+ loginBtn.textContent="Connecting...";
+ try{
+  const {error}=await supabaseClient.auth.signInWithOAuth({
+   provider:"google",
+   options:{redirectTo:window.location.origin}
+  });
+  if(error)throw error;
+ }catch(error){
+  alert("Google login error: "+error.message);
+  loginBtn.disabled=false;
+  loginBtn.textContent="Login with Google";
+ }
 }
 
-async function logout() {
-  loginBtn.disabled = true;
-  const { error } = await supabaseClient.auth.signOut();
-  if (error) alert(error.message);
-  await updateLoginButton();
+async function logout(){
+ loginBtn.disabled=true;
+ const {error}=await supabaseClient.auth.signOut();
+ if(error)alert(error.message);
+ await updateLoginButton();
 }
 
-async function updateLoginButton() {
-  const { data, error } = await supabaseClient.auth.getSession();
-  if (error) {
-    console.error(error);
-    return;
-  }
+async function updateLoginButton(){
+ const {data,error}=await supabaseClient.auth.getSession();
+ if(error){console.error(error);return}
+ const user=data.session?.user;
 
-  const user = data.session?.user;
-
-  if (user) {
-    loginBtn.textContent = "Logout";
-    loginBtn.onclick = logout;
-    dashboard.hidden = false;
-    dashboardNav.hidden = false;
-
-    document.getElementById("dashboardEmail").textContent =
-      user.email || "";
-
-    document.getElementById("dashboardGreeting").textContent =
-      user.user_metadata?.full_name ||
-      user.user_metadata?.name ||
-      "Welcome back!";
-
-    await loadMyBots();
-  } else {
-    loginBtn.textContent = "Login with Google";
-    loginBtn.onclick = loginWithGoogle;
-    dashboard.hidden = true;
-    dashboardNav.hidden = true;
-  }
-
-  loginBtn.disabled = false;
+ if(user){
+  loginBtn.textContent="Logout";
+  loginBtn.onclick=logout;
+  dashboard.hidden=false;
+  dashboardNav.hidden=false;
+  document.getElementById("dashboardEmail").textContent=user.email||"";
+  document.getElementById("dashboardGreeting").textContent=
+   user.user_metadata?.full_name||user.user_metadata?.name||"Welcome back!";
+  await loadMyBots();
+ }else{
+  loginBtn.textContent="Login with Google";
+  loginBtn.onclick=loginWithGoogle;
+  dashboard.hidden=true;
+  dashboardNav.hidden=true;
+ }
+ loginBtn.disabled=false;
 }
 
-loginBtn.onclick = loginWithGoogle;
+loginBtn.onclick=loginWithGoogle;
 
-supabaseClient.auth.onAuthStateChange((event) => {
-  if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-    setTimeout(updateLoginButton, 0);
-  }
+supabaseClient.auth.onAuthStateChange((event)=>{
+ if(event==="SIGNED_IN"||event==="SIGNED_OUT"){
+  setTimeout(updateLoginButton,0);
+ }
 });
 
-async function loadMyBots() {
-  const list = document.getElementById("botList");
-  const count = document.getElementById("botCount");
-
-  const { data, error } = await supabaseClient
-    .from("bots")
-    .select("id,name,status,created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    list.innerHTML =
-      '<div class="empty">Could not load bots: ' +
-      escapeHTML(error.message) + '</div>';
-    return;
-  }
-
-  count.textContent = data.length;
-
-  if (!data.length) {
-    list.innerHTML =
-      '<div class="empty"><strong>No bots uploaded</strong>Your uploaded bots will appear here.</div>';
-    return;
-  }
-
-  list.innerHTML = data.map(bot => `
-    <div class="bot-item">
-      <strong>${escapeHTML(bot.name)}</strong>
-      <small>Status: ${escapeHTML(bot.status)}</small>
-    </div>
-  `).join("");
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,char=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[char]);
 }
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+async function loadMyBots(){
+ const list=document.getElementById("botList");
+ const recent=document.getElementById("recentBots");
+ const count=document.getElementById("botCount");
+
+ const {data,error}=await supabaseClient
+  .from("bots")
+  .select("id,name,status,runtime,created_at")
+  .order("created_at",{ascending:false});
+
+ if(error){
+  list.innerHTML='<div class="empty">Could not load bots: '+escapeHTML(error.message)+'</div>';
+  return;
+ }
+
+ count.textContent=data.length;
+
+ if(!data.length){
+  const empty='<div class="empty"><strong>No deployments yet</strong>Upload a ZIP from Overview to get started.</div>';
+  list.innerHTML=empty;
+  recent.innerHTML=empty;
+  return;
+ }
+
+ const renderBot=bot=>`
+  <div class="bot-item">
+   <div class="bot-meta">
+    <strong>${escapeHTML(bot.name)}</strong>
+    <small>${bot.runtime==="python"?"Python · discord.py":"JavaScript · Node.js"} | Status: ${escapeHTML(bot.status)}</small>
+   </div>
+   <span class="status">PENDING</span>
+  </div>`;
+
+ list.innerHTML=data.map(renderBot).join("");
+ recent.innerHTML=data.slice(0,3).map(renderBot).join("");
 }
 
-// Customer ZIP upload
-const botZipInput = document.getElementById("botZip");
-const uploadFileName = document.getElementById("uploadFileName");
-const uploadBtn = document.getElementById("uploadBtn");
-
-let selectedBotZip = null;
-
-botZipInput.addEventListener("change", () => {
-  const file = botZipInput.files?.[0];
-  selectedBotZip = null;
-
-  if (!file) {
-    uploadFileName.textContent = "No file selected.";
-    uploadBtn.disabled = true;
-    return;
-  }
-
-  if (!file.name.toLowerCase().endsWith(".zip")) {
-    uploadFileName.textContent = "Please select a ZIP file.";
-    botZipInput.value = "";
-    uploadBtn.disabled = true;
-    return;
-  }
-
-  if (file.size === 0 || file.size > 25 * 1024 * 1024) {
-    uploadFileName.textContent =
-      "ZIP must be greater than 0 bytes and no larger than 25 MB.";
-    botZipInput.value = "";
-    uploadBtn.disabled = true;
-    return;
-  }
-
-  selectedBotZip = file;
-  uploadFileName.textContent =
-    file.name + " (" + (file.size / 1048576).toFixed(2) + " MB)";
-
-  uploadBtn.disabled = false;
-  uploadBtn.textContent = "Upload ZIP";
+document.querySelectorAll("[data-panel]").forEach(button=>{
+ button.addEventListener("click",()=>showPanel(button.dataset.panel));
+});
+document.querySelectorAll("[data-go]").forEach(button=>{
+ button.addEventListener("click",()=>showPanel(button.dataset.go));
 });
 
-uploadBtn.addEventListener("click", uploadBotZip);
-
-async function uploadBotZip() {
-  if (!selectedBotZip) return;
-
-  uploadBtn.disabled = true;
-  uploadBtn.textContent = "Uploading...";
-
-  let uploadedPath = null;
-
-  try {
-    const { data: sessionData, error: sessionError } =
-      await supabaseClient.auth.getSession();
-
-    if (sessionError) throw sessionError;
-
-    const user = sessionData.session?.user;
-
-    if (!user) {
-      throw new Error("Please log in with Google first.");
-    }
-
-    const botId = crypto.randomUUID();
-    const safeName = selectedBotZip.name.replace(/[^\w.-]/g, "_");
-    const storagePath = user.id + "/" + botId + "/" + safeName;
-
-    const { error: uploadError } = await supabaseClient.storage
-      .from("bot-uploads")
-      .upload(storagePath, selectedBotZip, {
-        contentType: "application/zip",
-        upsert: false
-      });
-
-    if (uploadError) throw uploadError;
-
-    uploadedPath = storagePath;
-
-    const botName = selectedBotZip.name.replace(/\.zip$/i, "");
-
-    const { error: databaseError } = await supabaseClient
-      .from("bots")
-      .insert({
-        id: botId,
-        owner_id: user.id,
-        name: botName,
-        storage_path: storagePath,
-        status: "pending"
-      });
-
-    if (databaseError) throw databaseError;
-
-    document.getElementById("consoleOutput").textContent +=
-      "\n[INFO] ZIP uploaded successfully: " + safeName;
-
-    uploadFileName.textContent = "Upload successful: " + safeName;
-    uploadBtn.textContent = "Upload Successful";
-
-    selectedBotZip = null;
-    botZipInput.value = "";
-
-    await loadMyBots();
-    alert("Your bot ZIP was uploaded successfully!");
-
-  } catch (error) {
-    console.error("Upload error:", error);
-
-    if (uploadedPath) {
-      const { error: cleanupError } = await supabaseClient.storage
-        .from("bot-uploads")
-        .remove([uploadedPath]);
-
-      if (cleanupError) {
-        console.error("Upload cleanup error:", cleanupError);
-      }
-    }
-
-    alert("Upload failed: " + error.message);
-    uploadBtn.textContent = "Upload ZIP";
-
-  } finally {
-    uploadBtn.disabled = !selectedBotZip;
-  }
+function showPanel(name){
+ document.querySelectorAll(".panel-view").forEach(view=>{
+  view.hidden=view.id!=="view-"+name;
+ });
+ document.querySelectorAll(".side-link").forEach(link=>{
+  link.classList.toggle("active",link.dataset.panel===name);
+ });
 }
 
-function planNotice(plan) {
-  alert(plan + " selected. Plan checkout is not connected yet.");
-}
+const botZipInput=document.getElementById("botZip");
+const uploadFileName=document.getElementById("uploadFileName");
+const uploadBtn=document.getElementById("uploadBtn");
+let selectedBotZip=null;
 
-updateLoginButton();
-</script>
-</body>
-</html>
+botZipInput.addEventListener("change",()=>{
+ const file=botZipInput.files?.[0];
+ selectedBotZip=null;
+
+ if(!file){
+  uploadFileName.textContent="No file selected.";
+  uploadBtn.disabled=true;
+  return;
+ }
+ if(!file.name.toLowerCase().endsWith(".zip")){
+  uploadFileName.textContent="Please select a ZIP file.";
+  botZipInput.value="";
+  uploadBtn.disabled=true;
+  return;
+ 
