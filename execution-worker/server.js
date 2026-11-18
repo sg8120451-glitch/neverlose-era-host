@@ -23,7 +23,8 @@ export function createApp(env = process.env) {
   app.get("/health", async () => ({
     status: "healthy",
     service: "neverlose-era-execution-worker",
-    executionEnabled: enabled
+    executionEnabled: false,
+    executionConfigured: enabled
   }));
 
   app.post("/v1/projects/:action", async (request, reply) => {
