@@ -382,6 +382,15 @@ a {
   gap:18px;
 }
 
+.dashboard-tab { background:var(--surface2); border-color:var(--border); color:var(--text); }
+.dashboard-tab:focus-visible, .btn:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.btn:disabled { opacity:.42; cursor:not-allowed; transform:none; filter:saturate(.4); }
+.dashboard-panel { scroll-margin-top:100px; }
+.dashboard-panel h2 { margin-bottom:8px; }
+.dashboard-panel p { color:var(--muted); font-size:13px; margin-top:7px; }
+#bot-list { margin-top:16px; display:grid; gap:12px; }
+#console-output { border:1px solid var(--border); font:12px/1.6 ui-monospace,monospace; }
+
 .feature-card {
   background:var(--surface);
   border:1px solid var(--border);
@@ -976,11 +985,13 @@ a {
       <h3>Dashboard Menu</h3>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
         <button class="btn dashboard-tab" data-panel="overview-panel" type="button">Overview</button>
-        <button class="btn dashboard-tab" data-panel="deployments-panel" type="button">Deployments</button>
-        <button class="btn dashboard-tab" data-panel="uploads-panel" type="button">Files & Uploads</button>
+        <button class="btn dashboard-tab" data-panel="deployments-panel" type="button">Servers</button>
+        <button class="btn dashboard-tab" data-panel="uploads-panel" type="button">Files</button>
         <button class="btn dashboard-tab" data-panel="console-panel" type="button">Console</button>
         <button class="btn dashboard-tab" data-panel="variables-panel" type="button">Variables</button>
+        <button class="btn dashboard-tab" data-panel="network-panel" type="button">Network</button>
         <button class="btn dashboard-tab" data-panel="backups-panel" type="button">Backups</button>
+        <button class="btn dashboard-tab" data-panel="usage-panel" type="button">Usage</button>
         <button class="btn dashboard-tab" data-panel="settings-panel" type="button">Settings</button>
       </div>
     </div>
@@ -1044,9 +1055,28 @@ a {
       <p>Project backup tools are planned.</p>
     </div>
 
+    <div class="feature-card dashboard-panel" id="network-panel" style="margin-top:20px;display:none;">
+      <h2>Network</h2>
+      <p>Network allocation and port management will appear here when a verified execution worker is connected.</p>
+      <div class="preview-grid">
+        <div class="preview-stat"><span>Allocated Port</span><strong>Not assigned</strong></div>
+        <div class="preview-stat"><span>Inbound Traffic</span><strong>—</strong></div>
+        <div class="preview-stat"><span>Outbound Traffic</span><strong>—</strong></div>
+      </div>
+    </div>
+    <div class="feature-card dashboard-panel" id="usage-panel" style="margin-top:20px;display:none;">
+      <h2>Resource Usage</h2>
+      <p>Live CPU, memory, disk and uptime metrics become available after a real runtime is connected. No usage values are simulated.</p>
+      <div class="preview-grid">
+        <div class="preview-stat"><span>CPU</span><strong>Unavailable</strong></div>
+        <div class="preview-stat"><span>Memory</span><strong>Unavailable</strong></div>
+        <div class="preview-stat"><span>Uptime</span><strong>Offline</strong></div>
+      </div>
+    </div>
     <div class="feature-card dashboard-panel" id="settings-panel" style="margin-top:20px;display:none;">
       <h2>Settings</h2>
-      <p>Account and project settings will be added here.</p>
+      <p>Account sign-in and project ownership are active. Server-specific settings will be enabled with the execution service.</p>
+      <p style="margin-top:12px;">Runtime: Node.js · ZIP upload limit: 25 MB · Project storage: private</p>
     </div>
   </div>
 </section>
