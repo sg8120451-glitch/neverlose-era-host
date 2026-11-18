@@ -734,7 +734,7 @@ a {
         <a href="#features" class="btn btn-outline">Explore Features</a>
       </div>
 
-      <p class="hero-note">JavaScript and Python project support · Private file storage</p>
+      <p class="hero-note">Node.js project uploads · Private file storage · Secure execution coming next</p>
     </div>
 
     <div class="preview-wrap">
@@ -890,7 +890,7 @@ a {
     <div class="features-grid">
       <article class="feature-card">
         <h3>Which languages are supported?</h3>
-        <p>You can upload JavaScript and Python bot projects.</p>
+        <p>Node.js bot project uploads are currently supported. Python support is planned.</p>
       </article>
 
       <article class="feature-card">
@@ -1014,7 +1014,6 @@ a {
       <label for="runtime-select">Bot Language</label>
       <select id="runtime-select" style="width:100%;margin:10px 0;">
         <option value="nodejs">JavaScript / Node.js</option>
-        <option value="python">Python</option>
       </select>
 
       <label for="bot-name">Project Name</label>
@@ -1194,6 +1193,9 @@ function updateAccountDisplay() {
   const status = document.getElementById("account-status");
   const loginButton = document.getElementById("google-login-dashboard");
   const logoutButton = document.getElementById("logout-button");
+  const navLoginButton = document.getElementById("navLoginBtn");
+
+  if (navLoginButton) navLoginButton.textContent = currentUser ? "Dashboard" : "Login / Sign Up";
 
   if (currentUser) {
     if (email) email.textContent = currentUser.email || "Signed in";
@@ -1299,6 +1301,15 @@ async function uploadBotProject() {
     uploadButton.disabled = false;
   }
 }
+
+// HEADER ACCOUNT BUTTON
+document.getElementById("navLoginBtn")?.addEventListener("click", () => {
+  if (currentUser) {
+    document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth" });
+  } else {
+    signInWithGoogle();
+  }
+});
 
 // GOOGLE LOGIN BUTTON
 document.getElementById("google-login-dashboard")
