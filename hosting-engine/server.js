@@ -3,6 +3,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
+import routes from "./routes.js";
 
 const app = Fastify({
   logger: true,
@@ -33,6 +34,9 @@ app.get("/health", async () => ({
   status: "healthy",
   service: "hosting-engine"
 }));
+
+// Register authenticated API routes
+await app.register(routes);
 
 try {
   await app.listen({
