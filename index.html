@@ -134,7 +134,7 @@ a {
 }
 
 .btn-primary {
-  background:linear-gradient(110deg,#9b67f5,#557eff);
+  background:linear-gradient(110deg,#25c995,#238eaa);
   color:white;
   box-shadow:0 8px 30px rgba(126,91,230,.25);
 }
@@ -691,6 +691,7 @@ a {
   }
 }
 /* NEVERLOSE ERA HOKAS-inspired control-panel theme */
+.btn-primary{background:linear-gradient(110deg,#25c995,#238eaa);color:#06130f;box-shadow:0 8px 25px rgba(54,214,164,.16)}.brand-icon{background:linear-gradient(135deg,#25c995,#238eaa)}.preview-glow{background:linear-gradient(90deg,#25c995,#238eaa)}
 :root{--bg:#0b1016;--surface:#111923;--surface2:#17232e;--text:#edf5f7;--muted:#91a2ad;--border:#263641;--accent:#36d6a4;--blue:#42b9d8;--glow:rgba(54,214,164,.14);--success:#36d6a4;--danger:#ff6b7c;--header:rgba(11,16,22,.94)}
 body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted:#637780;--border:#d8e3e6;--accent:#159b78;--blue:#168aaa;--glow:rgba(21,155,120,.1);--header:rgba(242,246,247,.94)}
 #dashboard{padding-top:58px}#dashboard>.container{width:min(1320px,94%)}#dashboard .section-heading{max-width:none;text-align:left;margin:0 0 24px}#dashboard .section-heading h2{font-size:clamp(27px,4vw,38px)}
@@ -1003,7 +1004,7 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
     <div class="feature-card" style="margin-top:24px;">
       <h3>Control Panel Navigation</h3>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-        <button class="btn dashboard-tab" data-panel="overview-panel" type="button">Overview</button>
+        <button class="btn dashboard-tab active" data-panel="overview-panel" type="button" aria-current="page">Overview</button>
         <button class="btn dashboard-tab" data-panel="deployments-panel" type="button">Servers</button>
         <button class="btn dashboard-tab" data-panel="uploads-panel" type="button">Files</button>
         <button class="btn dashboard-tab" data-panel="console-panel" type="button">Console</button>
@@ -1149,6 +1150,12 @@ async function signInWithGoogle() {
 function showDashboardPanel(panelId) {
   document.querySelectorAll(".dashboard-panel").forEach(panel => {
     panel.style.display = panel.id === panelId ? "block" : "none";
+  });
+  document.querySelectorAll(".dashboard-tab").forEach(button => {
+    const active = button.dataset.panel === panelId;
+    button.classList.toggle("active", active);
+    if (active) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
   });
 }
 
