@@ -1245,7 +1245,7 @@ async function uploadBotProject() {
       .insert({
         owner_id: currentUser.id,
         name: projectName,
-        status: "stored",
+        status: "pending",
         runtime: runtime,
         storage_path: storagePath
       });
