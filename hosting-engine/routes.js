@@ -170,18 +170,51 @@ export default async function routes(app) {
     );
   }
 
+  async function checkWorkerHealth() {
+    if (!workerConfigured()) return { connected: false, executionEnabled: false };
+    try {
+      const workerBase = new URL(process.env.EXECUTION_WORKER_URL);
+      if (
+        workerBase.protocol !== "https:" ||
+        workerBase.username ||
+        workerBase.password ||
+        workerBase.search ||
+        workerBase.hash
+      ) return { connected: false, executionEnabled: false };
+
+      const response = await fetch(new URL("/health", workerBase), {
+        method: "GET",
+        signal: AbortSignal.timeout(5000)
+      });
+      if (!response.ok) return { connected: false, executionEnabled: false };
+      const health = await response.json();
+      return {
+        connected: health?.status === "healthy" &&
+          health?.service === "neverlose-era-execution-worker",
+        executionEnabled: health?.executionEnabled === true
+      };
+    } catch {
+      return { connected: false, executionEnabled: false };
+    }
+  }
+
   app.get(
     "/api/hosting/capabilities",
     { preHandler: requireAuth },
-    async () => ({
-      success: true,
-      uploadEnabled: true,
-      executionEnabled: workerConfigured(),
-      supportedRuntimes: ["nodejs"],
-      executionWorkerConnected: workerConfigured(),
-      message: workerConfigured()
-        ? "Execution worker is configured. Project actions are available."
-        : "Uploads and project listing are ready. Configure a secure isolated worker to enable execution."
-    })
+    async () => {
+      const worker = await checkWorkerHealth();
+      return {
+        success: true,
+        uploadEnabled: true,
+        executionEnabled: worker.connected && worker.executionEnabled,
+        supportedRuntimes: ["nodejs"],
+        executionWorkerConnected: worker.connected,
+        message: worker.connected && worker.executionEnabled
+          ? "Isolated execution worker is healthy and enabled."
+          : worker.connected
+            ? "Worker is reachable, but execution is safely disabled."
+            : "Uploads and project listing are ready. No healthy execution worker is connected."
+      };
+    }
   );
 }
