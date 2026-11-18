@@ -67,7 +67,29 @@ export default async function routes(app) {
       error.statusCode = 503;
       throw error;
     }
-    const response = await fetch(new URL(path, process.env.EXECUTION_WORKER_URL), {
+
+    // Never send the shared worker token over an insecure or malformed URL.
+    let workerBase;
+    try {
+      workerBase = new URL(process.env.EXECUTION_WORKER_URL);
+    } catch {
+      const error = new Error("Execution worker URL is invalid.");
+      error.statusCode = 503;
+      throw error;
+    }
+    if (
+      workerBase.protocol !== "https:" ||
+      workerBase.username ||
+      workerBase.password ||
+      workerBase.search ||
+      workerBase.hash
+    ) {
+      const error = new Error("Execution worker must use a clean HTTPS URL.");
+      error.statusCode = 503;
+      throw error;
+    }
+
+    const response = await fetch(new URL(path, workerBase), {
       method: "POST",
       headers: {
         Authorization: "Bearer " + process.env.EXECUTION_WORKER_TOKEN,
