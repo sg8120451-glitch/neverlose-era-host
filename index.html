@@ -4,136 +4,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b14">
-<title>NEVERLOSE ERA | Bot Hosting</title>
+<meta name="theme-color" content="#0b0718">
+<title>NEVERLOSE ERA | Premium Bot Hosting</title>
+<meta name="description" content="NEVERLOSE ERA - Discord bot hosting and deployment dashboard.">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#080b14;color:white;line-height:1.6}
-a{color:inherit;text-decoration:none}
-button{cursor:pointer;font-family:inherit}
-header{position:sticky;top:0;z-index:10;background:#080b14;border-bottom:1px solid #20283b}
-nav{max-width:1200px;margin:auto;padding:17px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{font-size:19px;font-weight:900;letter-spacing:1px}
-.logo span,h1 span{color:#3987ff}
-.nav-links{display:flex;gap:17px;align-items:center;font-size:13px;color:#c4ccdd}
-.login-btn,.primary-btn{background:#2878f5;color:white;border:0;border-radius:9px;padding:11px 17px;font-weight:bold}
-.login-btn:disabled,.primary-btn:disabled{opacity:.55;cursor:not-allowed}
-.hero{max-width:1150px;margin:auto;padding:90px 20px;text-align:center}
-.tag{display:inline-block;color:#7db2ff;border:1px solid #24477e;background:#101e36;padding:6px 13px;border-radius:30px;font-size:12px;margin-bottom:22px}
-h1{font-size:clamp(38px,7vw,68px);line-height:1.12}
-.hero p{max-width:650px;margin:20px auto;color:#aab4c8;font-size:16px}
-.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px}
-.secondary-btn{border:1px solid #34415a;padding:10px 17px;border-radius:9px;color:#d9e2f5;background:transparent}
-.section{max-width:1200px;margin:auto;padding:55px 20px}
-.section-heading{text-align:center;margin-bottom:32px}
-.section-heading h2{font-size:32px}
-.section-heading p{color:#9ba8bf;margin-top:7px}
-.features,.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
-.feature,.plan,.dash-panel,.dash-card,.notice{background:#101625;border:1px solid #222e44;border-radius:14px;padding:22px}
-.feature-icon{font-size:29px}
-.feature p,.plan p{color:#9ba8bf;font-size:13px;margin-top:7px}
-.plan h3{font-size:21px}
-.price{font-size:30px;font-weight:900;margin:15px 0}
-.price small{font-size:12px;color:#9ba8bf;font-weight:normal}
-.plan ul{list-style:none;margin:16px 0;color:#d0d8e8;font-size:13px}
-.plan li{padding:6px 0}
-.plan li:before{content:"✓ ";color:#4c9bff}
-.plan button{width:100%;padding:11px;background:#1c3154;color:white;border:1px solid #3564a4;border-radius:8px;font-weight:bold}
-.featured{border-color:#3987ff}
-.featured button{background:#2878f5}
-.trial{display:inline-block;background:#142b24;color:#76e4ae;border-radius:5px;padding:4px 9px;font-size:11px;margin-bottom:10px}
-.ai-box{text-align:center;background:linear-gradient(135deg,#101d35,#111426);border:1px solid #294a7c;border-radius:17px;padding:35px 20px}
-.ai-box p{max-width:650px;margin:12px auto;color:#aab4c8}
-footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8995aa;font-size:13px}
-#dashboard[hidden]{display:none!important}
-.muted{color:#9ba8bf;font-size:13px}
-.panel-shell{display:grid;grid-template-columns:215px minmax(0,1fr);gap:17px;align-items:start}
-.panel-sidebar,.panel-main{background:#0d1422;border:1px solid #222e44;border-radius:14px;padding:16px}
-.panel-sidebar{position:sticky;top:85px;min-height:520px}
-.panel-brand{font-weight:900;letter-spacing:1px;padding:8px 9px 20px;border-bottom:1px solid #253149;margin-bottom:12px}
-.panel-brand span{color:#3987ff}
-.panel-brand small{display:block;color:#8292ad;font-size:9px;letter-spacing:2px}
-.side-link{display:block;width:100%;text-align:left;background:transparent;border:0;color:#aebbd0;padding:12px 10px;border-radius:8px;margin:3px 0;font-weight:600}
-.side-link:hover,.side-link.active{background:#172b4a;color:#fff}
-.sidebar-foot{font-size:11px;color:#8392aa;border-top:1px solid #253149;margin-top:25px;padding:14px 8px}
-.panel-main{min-width:0}
-.panel-topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
-.panel-topbar h2{font-size:24px}
-.panel-topbar p{overflow-wrap:anywhere}
-.status{font-size:10px;color:#ffc66d;border:1px solid #795a28;background:#2a2113;padding:5px 9px;border-radius:20px;white-space:nowrap}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:17px}
-.dash-card{padding:17px}
-.dash-card strong{display:block;font-size:28px}
-.dash-card span,.dash-card small{color:#9ba8bf;font-size:12px}
-.panel-view[hidden]{display:none!important}
-.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
-.panel-heading p{font-size:12px;color:#9ba8bf}
-.panel-heading h3{font-size:18px}
-.language-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 16px}
-.language-choice{display:flex;gap:10px;align-items:center;padding:13px;background:#0b1424;border:1px solid #2a3a55;border-radius:10px;cursor:pointer}
-.language-choice:has(input:checked){border-color:#3987ff;background:#112442}
-.language-choice input{accent-color:#3987ff}
-.language-choice b,.language-choice small{display:block}
-.language-choice small{font-size:11px;color:#9ba8bf}
-.upload-zone{display:flex;min-height:145px;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:7px;border:1px dashed #42628e;background:#0b1424;border-radius:11px;padding:15px;cursor:pointer}
-.upload-zone:hover{border-color:#3987ff}
-.upload-zone span{font-size:30px;color:#65a5ff}
-.upload-zone small{font-size:11px;color:#9ba8bf}
-.file-note{font-size:12px;color:#9ba8bf;margin:10px 0;overflow-wrap:anywhere}
-.full-btn{width:100%;margin-top:7px}
-.bot-item{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0b1424;border:1px solid #26354d;border-radius:9px;padding:13px;margin:9px 0;overflow-wrap:anywhere}
-.bot-meta{min-width:0}
-.bot-meta small{display:block;color:#9ba8bf}
-.empty{text-align:center;padding:30px 10px;color:#9ba8bf}
-.empty strong{display:block;color:white}
-.console{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d17;border:1px solid #1e2b40;border-radius:9px;padding:14px;color:#9ec5ff;font:12px/1.8 monospace}
-.notice{border-color:#294a7c;margin-top:17px}
-.notice strong{color:#8dbbff}
-.notice p{color:#aab4c8;font-size:12px;margin-top:6px}
-.info-card{background:#0b1424;border:1px solid #26354d;border-radius:10px;padding:17px;margin-top:12px}
-@media(max-width:900px){
-.panel-shell{grid-template-columns:1fr}
-.panel-sidebar{position:static;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
-.panel-brand,.sidebar-foot{grid-column:1/-1}
-.stats{grid-template-columns:1fr 1fr}
+:root{
+ --bg:#0b0718;--surface:#130e25;--surface2:#1b1432;
+ --text:#f7f4ff;--muted:#aaa0c2;--border:#30234c;
+ --accent:#a879ff;--blue:#648cff;--glow:rgba(168,121,255,.2);
 }
-@media(max-width:750px){
-.features,.plans{grid-template-columns:1fr}
-.nav-links{gap:9px;font-size:11px}
-.logo{font-size:15px}
-.panel-topbar{align-items:flex-start;flex-direction:column}
+body.light{
+ --bg:#f5f2ff;--surface:#fff;--surface2:#eee8ff;
+ --text:#211538;--muted:#716487;--border:#ded4f2;
+ --accent:#7445d6;--blue:#4169dc;--glow:rgba(116,69,214,.12);
 }
-@media(max-width:520px){
-.language-options{grid-template-columns:1fr}
-.panel-sidebar{grid-template-columns:1fr 1fr}
-.side-link{font-size:12px;padding:10px 7px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:.25s}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+nav{max-width:1200px;margin:auto;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{font-weight:950;font-size:20px;letter-spacing:1px;white-space:nowrap}
+.logo span,.gradient-text{background:linear-gradient(100deg,var(--accent),#64c8ff);background-clip:text;color:transparent}
+.nav-links{display:flex;align-items:center;gap:22px;font-size:13px;color:var(--muted)}
+.nav-links a:hover{color:var(--accent)}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;border-radius:10px;padding:11px 18px;font-weight:750;transition:.2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.primary{color:white;background:linear-gradient(110deg,#8653e8,#477de9);box-shadow:0 7px 25px var(--glow)}
+.secondary{color:var(--text);background:var(--surface2);border:1px solid var(--border)}
+.small-btn{padding:8px 12px;font-size:12px}
+.theme-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;padding:9px 12px}
+.hero{max-width:1200px;margin:auto;padding:105px 22px 85px;text-align:center;position:relative}
+.hero:before{content:"";position:absolute;width:400px;height:300px;top:20px;left:50%;transform:translateX(-50%);background:var(--glow);filter:blur(90px);z-index:-1}
+.pill{display:inline-block;padding:6px 13px;border-radius:30px;border:1px solid var(--border);background:var(--surface2);color:var(--accent);font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:22px}
+.hero h1{font-size:clamp(40px,7vw,76px);line-height:1.08;letter-spacing:-2px}
+.hero p{max-width:650px;margin:22px auto;color:var(--muted);font-size:16px}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px}
+.trust-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:40px;color:var(--muted);font-size:12px}
+.section{max-width:1200px;margin:auto;padding:65px 22px}
+.section-head{text-align:center;margin-bottom:35px}
+.section-head h2{font-size:clamp(26px,4vw,38px)}
+.section-head p{color:var(--muted);margin-top:8px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:23px;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.card-icon{font-size:30px;margin-bottom:13px}
+.card h3{font-size:17px}
+.card p{font-size:13px;color:var(--muted);margin-top:8px}
+.steps{counter-reset:step}
+.step{position:relative}
+.step:before{counter-increment:step;content:"0" counter(step);display:block;color:var(--accent);font-size:25px;font-weight:900;margin-bottom:13px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.plan{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:25px}
+.plan.featured{border-color:var(--accent);box-shadow:0 0 35px var(--glow)}
+.plan h3{font-size:20px}
+.price{font-size:34px;font-weight:900;margin:14px 0}
+.price small{font-size:12px;color:var(--muted);font-weight:400}
+.plan ul{list-style:none;margin:18px 0 22px;color:var(--muted);font-size:13px}
+.plan li{padding:7px 0;border-bottom:1px solid var(--border)}
+.plan li:before{content:"✓ ";color:var(--accent);font-weight:bold}
+.plan .btn{width:100%}
+.label{font-size:10px;color:var(--accent);font-weight:900;letter-spacing:1px}
+.faq{max-width:800px;margin:auto}
+details{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:10px 0}
+summary{cursor:pointer;font-weight:700;font-size:14px}
+details p{color:var(--muted);font-size:13px;margin-top:12px}
+.cta{background:linear-gradient(120deg,#241440,#14274c);border:1px solid #493477;border-radius:22px;padding:42px 20px;text-align:center}
+.cta p{color:#c3b9db;margin:10px auto 20px;max-width:600px}
+footer{border-top:1px solid var(--border);padding:35px 20px;text-align:center;color:var(--muted);font-size:12px}
+footer .logo{margin-bottom:10px}
+#dashboard[hidden],.view[hidden]{display:none!important}
+#dashboard{max-width:1200px;margin:auto;padding:40px 22px 70px}
+.dash-title{margin-bottom:25px}
+.dash-title p{color:var(--muted);font-size:13px}
+.dash-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px}
+.sidebar,.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:17px;min-width:0}
+.sidebar{height:max-content;position:sticky;top:85px}
+.side-brand{font-weight:900;padding:10px 8px 18px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.side-brand span{color:var(--accent)}
+.side-link{display:block;width:100%;border:0;border-radius:9px;text-align:left;padding:11px;background:transparent;color:var(--muted);margin:3px 0;font-weight:650;font-size:13px}
+.side-link:hover,.side-link.active{background:var(--surface2);color:var(--accent)}
+.dash-top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:20px}
+.dash-top p{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.status{display:inline-block;border:1px solid var(--border);background:var(--surface2);color:var(--accent);border-radius:30px;padding:5px 10px;font-size:10px;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:15px}
+.stat small{color:var(--muted);font-size:11px}
+.stat strong{display:block;font-size:25px;margin-top:5px}
+.panel{background:var(--surface2);border:1px solid var(--border);border-radius:13px;padding:19px;margin-bottom:16px}
+.panel h3{font-size:17px}
+.panel-desc{font-size:12px;color:var(--muted);margin:5px 0 15px}
+.runtime-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.runtime-option{display:flex;gap:10px;align-items:center;border:1px solid var(--border);padding:13px;border-radius:10px;cursor:pointer}
+.runtime-option:has(input:checked){border-color:var(--accent);background:var(--glow)}
+.runtime-option input{accent-color:var(--accent)}
+.runtime-option small{display:block;color:var(--muted);font-size:11px}
+.upload-zone{display:flex;min-height:130px;align-items:center;justify-content:center;flex-direction:column;gap:6px;border:1px dashed var(--accent);border-radius:12px;text-align:center;padding:15px;cursor:pointer}
+.upload-zone span{font-size:27px;color:var(--accent)}
+.upload-zone small{color:var(--muted);font-size:11px}
+.file-note{font-size:12px;color:var(--muted);margin:10px 0;overflow-wrap:anywhere}
+.full{width:100%}
+.bot-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px;border:1px solid var(--border);border-radius:10px;margin:9px 0}
+.bot-info{min-width:0;overflow-wrap:anywhere}
+.bot-info small{display:block;color:var(--muted);font-size:11px}
+.bot-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+.search{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--text);margin-bottom:13px}
+.console{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:15px;color:var(--accent);font:12px/1.8 monospace}
+.note{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:14px;border-radius:10px;margin-top:15px}
+.notice{color:var(--muted);font-size:12px;margin-top:17px;line-height:1.7}
+@media(max-width:850px){
+ .grid,.plans{grid-template-columns:repeat(2,1fr)}
+ .dash-layout{grid-template-columns:1fr}
+ .sidebar{position:static}
+ .sidebar-links{display:grid;grid-template-columns:repeat(2,1fr)}
+ .stats{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:420px){.stats{grid-template-columns:1fr}}
+@media(max-width:600px){
+ nav{flex-wrap:wrap}.nav-links{gap:11px;font-size:11px}
+ .nav-links a:nth-child(2),.nav-links a:nth-child(3){display:none}
+ .hero{padding:75px 18px}
+ .grid,.plans{grid-template-columns:1fr}
+ .runtime-options{grid-template-columns:1fr}
+ .bot-item{align-items:flex-start;flex-direction:column}
+ .bot-actions{justify-content:flex-start}
+}
 </style>
 </head>
 <body>
 <header>
 <nav>
-<a href="#" class="logo">NEVERLOSE <span>ERA</span></a>
+<a class="logo" href="#home">NEVERLOSE <span>ERA</span></a>
 <div class="nav-links">
 <a href="#features">Features</a>
 <a href="#plans">Plans</a>
+<a href="#faq">FAQ</a>
 <a href="#dashboard" id="dashboardNav" hidden>Dashboard</a>
-<button class="login-btn" id="loginBtn">Login with Google</button>
+<button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀ / ☾</button>
+<button class="btn primary small-btn" id="loginBtn">Login with Google</button>
 </div>
 </nav>
 </header>
 
 <main>
-<section class="section" id="dashboard" hidden>
-<div class="section-heading">
-<h2>NEVERLOSE ERA Control Panel</h2>
-<p>Your bots, files and hosting activity in one place.</p>
+<section class="hero" id="home">
+<div class="pill">✦ NEXT GENERATION DISCORD BOT HOSTING</div>
+<h1>YOUR BOTS.<br><span class="gradient-text">YOUR CONTROL.</span></h1>
+<p>Deploy, organize and manage your Discord bot projects with the NEVERLOSE ERA control panel. Built for creators who want a cleaner hosting experience.</p>
+<div class="actions">
+<a href="#plans" class="btn primary">Explore Hosting Plans →</a>
+<a href="#features" class="btn secondary">Discover Features</a>
 </div>
+<div class="trust-row">
+<span>✦ Google Account Login</span>
+<span>✦ Private Project Storage</span>
+<span>✦ JavaScript & Python</span>
+</div>
+</section>
 
-<div class="panel-shell">
-<aside class="panel-sidebar">
-<div class="panel-brand">NEVERLOSE <span>ERA</span><small>CONTROL PANEL</small></div>
+<section class="section" id="features">
+<div class="section-head">
+<div class="pill">PLATFORM FEATURES</div>
+<h2>Everything in <span class="gradient-text">one panel.</span></h2>
+<p>A simple starting point for managing your bot projects.</p>
+</div>
+<div class="grid">
+<div class="card"><div class="card-icon">🚀</div><h3>Easy Deployment</h3><p>Upload your bot project ZIP and keep its deployment details in your account.</p></div>
+<div class="card"><div class="card-icon">🔐</div><h3>Private Storage</h3><p>Your uploaded project archives are kept in private account storage.</p></div>
+<div class="card"><div class="card-icon">🟨</div><h3>JavaScript Support</h3><p>Choose Node.js for projects using discord.js and other JavaScript libraries.</p></div>
+<div class="card"><div class="card-icon">🐍</div><h3>Python Support</h3><p>Choose Python for projects using discord.py and compatible libraries.</p></div>
+<div class="card"><div class="card-icon">📊</div><h3>Control Panel</h3><p>View your saved deployments and manage your uploaded project files.</p></div>
+<div class="card"><div class="card-icon">🛡️</div><h3>Account Security</h3><p>Google authentication and account-based database and storage access.</p></div>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head">
+<div class="pill">GET STARTED</div>
+<h2>Three simple steps.</h2>
+<p>Start organizing your bot projects.</p>
+</div>
+<div class="grid steps">
+<div class="card step"><h3>Sign in</h3><p>Use your Google account to access your personal dashboard.</p></div>
+<div class="card step"><h3>Upload project</h3><p>Select JavaScript or Python and upload your bot project as a ZIP.</p></div>
+<div class="card step"><h3>Manage files</h3><p>See your saved deployments and manage the stored archives.</p></div>
+</div>
+</section>
+
+<section class="section" id="plans">
+<div class="section-head">
+<div class="pill">HOSTING PLANS</div>
+<h2>Choose your <span class="gradient-text">plan.</span></h2>
+<p>These are proposed plans. Checkout and actual hosting resources are not active yet.</p>
+</div>
+<div class="plans">
+<div class="plan">
+<span class="label">30-DAY TRIAL</span><h3>Free Trial</h3>
+<div class="price">₹0 <small>/ 30 days</small></div>
+<ul><li>1 Discord bot</li><li>512 MB RAM proposed</li><li>1 GB storage proposed</li><li>Basic dashboard</li></ul>
+<button class="btn secondary plan-btn" data-plan="Free Trial">Get Started</button>
+</div>
+<div class="plan featured">
+<span class="label">POPULAR PLAN</span><h3>Starter</h3>
+<div class="price">₹120 <small>/ 30 days</small></div>
+<ul><li>1 Discord bot</li><li>1 GB RAM proposed</li><li>3 GB storage proposed</li><li>Hosting dashboard</li></ul>
+<button class="btn primary plan-btn" data-plan="Starter">Choose Starter</button>
+</div>
+<div class="plan">
+<span class="label">MORE RESOURCES</span><h3>Pro</h3>
+<div class="price">₹180 <small>/ 30 days</small></div>
+<ul><li>2 Discord bots</li><li>2 GB RAM proposed</li><li>5 GB storage proposed</li><li>Hosting dashboard</li></ul>
+<button class="btn secondary plan-btn" data-plan="Pro">Choose Pro</button>
+</div>
+<div class="plan">
+<span class="label">ADVANCED</span><h3>Advanced</h3>
+<div class="price">₹260 <small>/ 30 days</small></div>
+<ul><li>3 Discord bots</li><li>3 GB RAM proposed</li><li>8 GB storage proposed</li><li>Priority support proposed</li></ul>
+<button class="btn secondary plan-btn" data-plan="Advanced">Choose Advanced</button>
+</div>
+<div class="plan">
+<span class="label">MAXIMUM PLAN</span><h3>Ultimate</h3>
+<div class="price">₹480 <small>/ 30 days</small></div>
+<ul><li>5 Discord bots</li><li>6 GB RAM proposed</li><li>15 GB storage proposed</li><li>Priority support proposed</li></ul>
+<button class="btn secondary plan-btn" data-plan="Ultimate">Choose Ultimate</button>
+</div>
+</div>
+<p class="notice">Plan prices and resource limits are display information only. Payments, subscriptions and actual hosting allocations are not connected.</p>
+</section>
+
+<section class="section" id="faq">
+<div class="section-head"><div class="pill">HELP CENTER</div><h2>Frequently asked questions</h2></div>
+<div class="faq">
+<details><summary>Can I upload a JavaScript bot?</summary><p>Yes. Select JavaScript / Node.js when uploading your ZIP.</p></details>
+<details><summary>Can I upload a Python bot?</summary><p>Yes. Select Python when uploading your ZIP.</p></details>
+<details><summary>Will my bot start automatically after upload?</summary><p>Not yet. Uploads are saved in private storage. A separate secure hosting runtime must be connected before bots can execute.</p></details>
+<details><summary>Are my uploaded ZIP files public?</summary><p>The configured bot-uploads bucket is private. Access is controlled by your authenticated account and storage policies.</p></details>
+<details><summary>Are payments available?</summary><p>Not yet. The plan cards are informational until a payment and subscription system is implemented.</p></details>
+</div>
+</section>
+
+<section class="section">
+<div class="cta">
+<div class="pill">NEVERLOSE ERA</div>
+<h2>Ready to manage your bots?</h2>
+<p>Sign in and open your personal project dashboard.</p>
+<button class="btn primary" id="ctaLogin">Open Dashboard →</button>
+</div>
+</section>
+
+<section id="dashboard" hidden>
+<div class="dash-title"><div class="pill">CUSTOMER CONTROL PANEL</div><h2>Welcome to <span class="gradient-text">your dashboard.</span></h2><p>Manage your projects and account.</p></div>
+<div class="dash-layout">
+<aside class="sidebar">
+<div class="side-brand">NEVERLOSE <span>ERA</span></div>
+<div class="sidebar-links">
 <button class="side-link active" data-panel="overview">▦ &nbsp; Overview</button>
 <button class="side-link" data-panel="deployments">▣ &nbsp; Deployments</button>
 <button class="side-link" data-panel="files">▤ &nbsp; Files & Uploads</button>
@@ -141,304 +267,73 @@ footer{border-top:1px solid #20283b;padding:28px 20px;text-align:center;color:#8
 <button class="side-link" data-panel="variables">⚙ &nbsp; Variables</button>
 <button class="side-link" data-panel="backups">◷ &nbsp; Backups</button>
 <button class="side-link" data-panel="settings">☷ &nbsp; Settings</button>
-<div class="sidebar-foot">Runtime connection pending</div>
+</div>
 </aside>
 
-<div class="panel-main">
-<div class="panel-topbar">
-<div>
-<span class="muted">CUSTOMER PANEL</span>
-<h2 id="dashboardGreeting">Welcome back!</h2>
-<p id="dashboardEmail" class="muted"></p>
-</div>
-<span class="status">RUNTIME NOT CONNECTED</span>
+<div class="main-panel">
+<div class="dash-top">
+<div><h2 id="dashboardGreeting">Welcome back!</h2><p id="dashboardEmail"></p></div>
+<span class="status">STORAGE CONNECTED</span>
 </div>
 
-<div class="panel-view" id="view-overview">
+<div class="view" id="view-overview">
 <div class="stats">
-<div class="dash-card"><span>Total deployments</span><strong id="botCount">0</strong><small>Your uploaded projects</small></div>
-<div class="dash-card"><span>Running</span><strong>0</strong><small>Runtime not connected</small></div>
-<div class="dash-card"><span>Account plan</span><strong>Free</strong><small>Demo account</small></div>
-<div class="dash-card"><span>Runtime usage</span><strong>—</strong><small>Not connected</small></div>
+<div class="stat"><small>Saved deployments</small><strong id="botCount">0</strong></div>
+<div class="stat"><small>Running bots</small><strong>—</strong></div>
+<div class="stat"><small>Account plan</small><strong>Free</strong></div>
+<div class="stat"><small>Runtime usage</small><strong>—</strong></div>
 </div>
-
-<div class="dash-panel">
-<div class="panel-heading">
-<div><h3>Quick deploy</h3><p>Create a new bot deployment.</p></div>
-<span>01</span>
+<div class="panel">
+<h3>＋ New deployment</h3>
+<p class="panel-desc">Choose a runtime and upload your bot project ZIP.</p>
+<div class="runtime-options">
+<label class="runtime-option"><input type="radio" name="botRuntime" value="nodejs" checked><span><b>🟨 JavaScript</b><small>Node.js · discord.js</small></span></label>
+<label class="runtime-option"><input type="radio" name="botRuntime" value="python"><span><b>🐍 Python</b><small>Python · discord.py</small></span></label>
 </div>
-
-<div class="language-options">
-<label class="language-choice">
-<input type="radio" name="botRuntime" value="nodejs" checked>
-<span><b>🟨 JavaScript</b><small>Node.js · discord.js</small></span>
-</label>
-<label class="language-choice">
-<input type="radio" name="botRuntime" value="python">
-<span><b>🐍 Python</b><small>Python · discord.py</small></span>
-</label>
+<label class="upload-zone" for="botZip"><span>⇧</span><b>Choose your ZIP file</b><small>ZIP only · Maximum 25 MB</small><input id="botZip" type="file" accept=".zip,application/zip" hidden></label>
+<p class="file-note" id="uploadFileName">No file selected.</p>
+<button class="btn primary full" id="uploadBtn" disabled>Upload project</button>
+<p class="notice">Your ZIP is saved privately. Uploading does not start the bot.</p>
 </div>
-
-<label class="upload-zone" for="botZip">
-<span>⇧</span>
-<strong>Choose Bot ZIP</strong>
-<small>ZIP only · Maximum 25 MB</small>
-<input id="botZip" type="file" accept=".zip,application/zip" hidden>
-</label>
-<p id="uploadFileName" class="file-note">No file selected.</p>
-<button class="primary-btn full-btn" id="uploadBtn" disabled>Upload deployment</button>
-<p class="muted" style="margin-top:10px">Your archive is stored in your private account storage. Execution is not enabled yet.</p>
-</div>
-
-<div class="dash-panel" style="margin-top:17px">
-<div class="panel-heading">
-<div><h3>Recent deployments</h3><p>Your latest bot projects.</p></div>
-<button class="secondary-btn" data-go="deployments">View all</button>
-</div>
-<div id="recentBots"><div class="empty">Your deployments will appear here.</div></div>
+<div class="panel">
+<h3>Recent deployments</h3>
+<p class="panel-desc">Your latest saved projects.</p>
+<div id="recentBots"><div class="empty">No deployments yet.</div></div>
 </div>
 </div>
 
-<div class="panel-view" id="view-deployments" hidden>
-<div class="dash-panel">
-<div class="panel-heading"><div><h3>Deployments</h3><p>All your uploaded bot projects.</p></div></div>
-<div id="botList"><div class="empty"><strong>No deployments yet</strong>Upload a ZIP from Overview to get started.</div></div>
+<div class="view" id="view-deployments" hidden>
+<div class="panel"><h3>All deployments</h3><p class="panel-desc">Search and manage your uploaded projects.</p>
+<input class="search" id="botSearch" placeholder="Search deployments...">
+<div id="botList"><div class="empty">Loading deployments...</div></div>
 </div>
 </div>
 
-<div class="panel-view" id="view-files" hidden>
-<div class="dash-panel">
-<h3>Files & Uploads</h3>
-<p class="muted">Your project ZIP archives are stored in your private Supabase bucket.</p>
-<div class="info-card">File browsing, editing and extraction will be connected with the hosting runtime.</div>
-</div>
+<div class="view" id="view-files" hidden>
+<div class="panel"><h3>Files & Uploads</h3><p class="panel-desc">Private ZIP archives saved to your account.</p><div id="fileList"><div class="empty">Your uploaded files will appear here.</div></div></div>
 </div>
 
-<div class="panel-view" id="view-console" hidden>
-<div class="dash-panel">
-<div class="panel-heading"><div><h3>Console</h3><p>Runtime output and diagnostics.</p></div><span class="status">OFFLINE</span></div>
-<pre class="console" id="consoleOutput">[NEVERLOSE ERA] Dashboard loaded.
-[INFO] Google authentication connected.
+<div class="view" id="view-console" hidden>
+<div class="panel"><h3>Console</h3><p class="panel-desc">Runtime console is not connected.</p>
+<pre class="console">[NEVERLOSE ERA] Dashboard initialized.
+[INFO] Authentication system available.
 [INFO] Private storage configured.
-[WAIT] Bot execution runtime not connected.</pre>
+[WAIT] Bot execution runtime pending.</pre>
 </div>
 </div>
 
-<div class="panel-view" id="view-variables" hidden>
-<div class="dash-panel">
-<h3>Environment variables</h3>
-<p class="muted">Secure server-side secret storage will be connected before bot tokens can be added.</p>
-<div class="info-card">Never put Discord bot tokens inside uploaded ZIP files, browser JavaScript or public database fields.</div>
-</div>
+<div class="view" id="view-variables" hidden>
+<div class="panel"><h3>Environment variables</h3><p class="panel-desc">Secure server-side secret management is not connected yet.</p><div class="note">Do not place Discord bot tokens in ZIP files, browser JavaScript, local storage or public database columns. Secret management must be implemented on the server.</div></div>
 </div>
 
-<div class="panel-view" id="view-backups" hidden>
-<div class="dash-panel">
-<h3>Backups</h3>
-<p class="muted">Backup creation and restore will be available after runtime integration.</p>
-</div>
+<div class="view" id="view-backups" hidden>
+<div class="panel"><h3>Backups</h3><p class="panel-desc">Automated backup and restore are not connected yet.</p></div>
 </div>
 
-<div class="panel-view" id="view-settings" hidden>
-<div class="dash-panel">
-<h3>Deployment settings</h3>
-<p class="muted">Choose JavaScript (Node.js) or Python when creating a deployment. Startup-file configuration will be added with runtime integration.</p>
+<div class="view" id="view-settings" hidden>
+<div class="panel"><h3>Account settings</h3><p class="panel-desc">Signed-in account details.</p><p id="settingsEmail"></p><button class="btn secondary" id="settingsLogout" style="margin-top:15px">Sign out</button></div>
+</div>
+<p class="notice">The deployment manager currently stores and manages project archives. Process controls, live logs, resource metrics and automatic execution require a separate secure runtime.</p>
 </div>
 </div>
-
-<div class="notice">
-<strong>Hosting setup in progress</strong>
-<p>Dashboard navigation, language selection, ZIP uploads and database records are supported. Running customer code, live console streaming, process controls and resource monitoring require a separate secure hosting runtime.</p>
-</div>
-</div>
-</div>
-</section>
-
-<section class="hero" id="home">
-<div class="tag">⚡ NEXT GENERATION BOT HOSTING</div>
-<h1>HOST YOUR BOTS.<br><span>NEVER STOP.</span></h1>
-<p>A new home for your Discord bots. Explore hosting plans, manage your projects and build something powerful with NEVERLOSE ERA.</p>
-<div class="hero-actions">
-<a href="#plans" class="primary-btn">Explore Plans</a>
-<a href="#features" class="secondary-btn">Discover Features</a>
-</div>
-</section>
-
-<section class="section" id="features">
-<div class="section-heading"><h2>Why NEVERLOSE ERA?</h2><p>Everything your bot hosting platform needs.</p></div>
-<div class="features">
-<div class="feature"><div class="feature-icon">🚀</div><h3>Fast Hosting</h3><p>Designed for smooth bot deployment and management.</p></div>
-<div class="feature"><div class="feature-icon">🛡️</div><h3>Secure Accounts</h3><p>Customer accounts and private project storage.</p></div>
-<div class="feature"><div class="feature-icon">🤖</div><h3>AI Error Assistant</h3><p>Planned tools to help troubleshoot code errors.</p></div>
-</div>
-</section>
-
-<section class="section" id="plans">
-<div class="section-heading"><h2>Choose Your Hosting</h2><p>Explore the proposed plans.</p></div>
-<div class="plans">
-<div class="plan"><div class="trial">30-DAY TRIAL</div><h3>Free Trial</h3><div class="price">₹0 <small>/ 30 days</small></div><ul><li>1 Discord bot</li><li>512 MB RAM</li><li>1 GB storage</li><li>Basic dashboard</li></ul><button onclick="planNotice('Free Trial')">Get Started</button></div>
-<div class="plan featured"><div class="trial">POPULAR PLAN</div><h3>Starter</h3><div class="price">₹120 <small>/ 30 days</small></div><ul><li>1 Discord bot</li><li>1 GB RAM</li><li>3 GB storage</li><li>Hosting dashboard</li></ul><button onclick="planNotice('Starter')">Choose Starter</button></div>
-<div class="plan"><h3>Pro</h3><div class="price">₹180 <small>/ 30 days</small></div><ul><li>2 Discord bots</li><li>2 GB RAM</li><li>5 GB storage</li><li>Hosting dashboard</li></ul><button onclick="planNotice('Pro')">Choose Pro</button></div>
-<div class="plan"><h3>Advanced</h3><div class="price">₹260 <small>/ 30 days</small></div><ul><li>3 Discord bots</li><li>3 GB RAM</li><li>8 GB storage</li><li>Priority support</li></ul><button onclick="planNotice('Advanced')">Choose Advanced</button></div>
-<div class="plan"><h3>Ultimate</h3><div class="price">₹480 <small>/ 30 days</small></div><ul><li>5 Discord bots</li><li>6 GB RAM</li><li>15 GB storage</li><li>Priority support</li></ul><button onclick="planNotice('Ultimate')">Choose Ultimate</button></div>
-</div>
-<p style="text-align:center;color:#8995aa;font-size:12px;margin-top:20px">Proposed prices and resources only. Hosting plans and payments are not active yet.</p>
-</section>
-
-<section class="section">
-<div class="ai-box">
-<h2>🤖 NEVERLOSE AI FIXER</h2>
-<p>Our planned AI assistant will help identify console errors and suggest code corrections.</p>
-<span class="tag">COMING SOON</span>
-</div>
-</section>
-</main>
-
-<footer>
-<div class="logo">NEVERLOSE <span>ERA</span></div>
-<p>© 2026 NEVERLOSE ERA. All rights reserved.</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://tntpedvbxyhoutzxznlw.supabase.co";
-const SUPABASE_KEY = "sb_publishable_WPvtzp4Ji2A854bwY2adcQ_tHnL4ggE";
-
-const supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const loginBtn = document.getElementById("loginBtn");
-const dashboard = document.getElementById("dashboard");
-const dashboardNav = document.getElementById("dashboardNav");
-
-async function loginWithGoogle(){
- loginBtn.disabled=true;
- loginBtn.textContent="Connecting...";
- try{
-  const {error}=await supabaseClient.auth.signInWithOAuth({
-   provider:"google",
-   options:{redirectTo:window.location.origin}
-  });
-  if(error)throw error;
- }catch(error){
-  alert("Google login error: "+error.message);
-  loginBtn.disabled=false;
-  loginBtn.textContent="Login with Google";
- }
-}
-
-async function logout(){
- loginBtn.disabled=true;
- const {error}=await supabaseClient.auth.signOut();
- if(error)alert(error.message);
- await updateLoginButton();
-}
-
-async function updateLoginButton(){
- const {data,error}=await supabaseClient.auth.getSession();
- if(error){console.error(error);return}
- const user=data.session?.user;
-
- if(user){
-  loginBtn.textContent="Logout";
-  loginBtn.onclick=logout;
-  dashboard.hidden=false;
-  dashboardNav.hidden=false;
-  document.getElementById("dashboardEmail").textContent=user.email||"";
-  document.getElementById("dashboardGreeting").textContent=
-   user.user_metadata?.full_name||user.user_metadata?.name||"Welcome back!";
-  await loadMyBots();
- }else{
-  loginBtn.textContent="Login with Google";
-  loginBtn.onclick=loginWithGoogle;
-  dashboard.hidden=true;
-  dashboardNav.hidden=true;
- }
- loginBtn.disabled=false;
-}
-
-loginBtn.onclick=loginWithGoogle;
-
-supabaseClient.auth.onAuthStateChange((event)=>{
- if(event==="SIGNED_IN"||event==="SIGNED_OUT"){
-  setTimeout(updateLoginButton,0);
- }
-});
-
-function escapeHTML(value){
- return String(value).replace(/[&<>"']/g,char=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- })[char]);
-}
-
-async function loadMyBots(){
- const list=document.getElementById("botList");
- const recent=document.getElementById("recentBots");
- const count=document.getElementById("botCount");
-
- const {data,error}=await supabaseClient
-  .from("bots")
-  .select("id,name,status,runtime,created_at")
-  .order("created_at",{ascending:false});
-
- if(error){
-  list.innerHTML='<div class="empty">Could not load bots: '+escapeHTML(error.message)+'</div>';
-  return;
- }
-
- count.textContent=data.length;
-
- if(!data.length){
-  const empty='<div class="empty"><strong>No deployments yet</strong>Upload a ZIP from Overview to get started.</div>';
-  list.innerHTML=empty;
-  recent.innerHTML=empty;
-  return;
- }
-
- const renderBot=bot=>`
-  <div class="bot-item">
-   <div class="bot-meta">
-    <strong>${escapeHTML(bot.name)}</strong>
-    <small>${bot.runtime==="python"?"Python · discord.py":"JavaScript · Node.js"} | Status: ${escapeHTML(bot.status)}</small>
-   </div>
-   <span class="status">PENDING</span>
-  </div>`;
-
- list.innerHTML=data.map(renderBot).join("");
- recent.innerHTML=data.slice(0,3).map(renderBot).join("");
-}
-
-document.querySelectorAll("[data-panel]").forEach(button=>{
- button.addEventListener("click",()=>showPanel(button.dataset.panel));
-});
-document.querySelectorAll("[data-go]").forEach(button=>{
- button.addEventListener("click",()=>showPanel(button.dataset.go));
-});
-
-function showPanel(name){
- document.querySelectorAll(".panel-view").forEach(view=>{
-  view.hidden=view.id!=="view-"+name;
- });
- document.querySelectorAll(".side-link").forEach(link=>{
-  link.classList.toggle("active",link.dataset.panel===name);
- });
-}
-
-const botZipInput=document.getElementById("botZip");
-const uploadFileName=document.getElementById("uploadFileName");
-const uploadBtn=document.getElementById("uploadBtn");
-let selectedBotZip=null;
-
-botZipInput.addEventListener("change",()=>{
- const file=botZipInput.files?.[0];
- selectedBotZip=null;
-
- if(!file){
-  uploadFileName.textContent="No file selected.";
-  uploadBtn.disabled=true;
-  return;
- }
- if(!file.name.toLowerCase().endsWith(".zip")){
-  uploadFileName.textContent="Please select a ZIP file.";
-  botZipInput.value="";
-  uploadBtn.disabled=true;
-  return;
- 
+</s
