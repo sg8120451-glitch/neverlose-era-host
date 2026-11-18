@@ -57,18 +57,109 @@ export default async function routes(app) {
     }
   );
 
-  // Be explicit: uploads are supported, but arbitrary project execution
-  // is not enabled until an isolated execution worker is configured.
+  // Execution is delegated to a separately isolated worker; this API never runs ZIP contents.
+  const workerConfigured = () =>
+    Boolean(process.env.EXECUTION_WORKER_URL && process.env.EXECUTION_WORKER_TOKEN);
+
+  async function workerRequest(path, payload) {
+    if (!workerConfigured()) {
+      const error = new Error("Secure execution worker is not connected yet.");
+      error.statusCode = 503;
+      throw error;
+    }
+    const response = await fetch(new URL(path, process.env.EXECUTION_WORKER_URL), {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + process.env.EXECUTION_WORKER_TOKEN,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(15000)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(result.error || "Execution worker request failed.");
+      error.statusCode = response.status >= 500 ? 502 : response.status;
+      throw error;
+    }
+    return result;
+  }
+
+  async function projectAction(request, reply, action) {
+    try {
+      const supabase = createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_PUBLIC_KEY,
+        {
+          global: { headers: { Authorization: "Bearer " + request.accessToken } },
+          auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+        }
+      );
+      const { data: project, error } = await supabase
+        .from("bots")
+        .select("id, owner_id, name, runtime, storage_path")
+        .eq("id", request.params.id)
+        .eq("owner_id", request.user.id)
+        .maybeSingle();
+
+      if (error) {
+        request.log.error({ err: error }, "Could not verify project ownership");
+        return reply.code(502).send({ error: "Could not verify project" });
+      }
+      if (!project) return reply.code(404).send({ error: "Project not found" });
+      if (project.runtime !== "nodejs") {
+        return reply.code(400).send({ error: "Only Node.js projects are currently supported." });
+      }
+
+      let archiveUrl;
+      if (action === "start" || action === "restart") {
+        if (!project.storage_path) {
+          return reply.code(400).send({ error: "Project archive is missing." });
+        }
+        const { data, error: storageError } = await supabase.storage
+          .from("bot-uploads")
+          .createSignedUrl(project.storage_path, 300);
+        if (storageError || !data?.signedUrl) {
+          request.log.error({ err: storageError }, "Could not create temporary project URL");
+          return reply.code(502).send({ error: "Could not prepare project archive." });
+        }
+        archiveUrl = data.signedUrl;
+      }
+
+      const result = await workerRequest("/v1/projects/" + action, {
+        projectId: project.id,
+        ownerId: project.owner_id,
+        name: project.name,
+        runtime: project.runtime,
+        archiveUrl
+      });
+      return { success: true, ...result };
+    } catch (error) {
+      request.log.error({ err: error }, "Execution worker action failed");
+      return reply.code(error.statusCode || 502).send({ error: error.message });
+    }
+  }
+
+  for (const action of ["start", "stop", "restart", "status", "logs"]) {
+    app.post(
+      "/api/projects/:id/" + action,
+      { preHandler: requireAuth },
+      (request, reply) => projectAction(request, reply, action)
+    );
+  }
+
   app.get(
     "/api/hosting/capabilities",
     { preHandler: requireAuth },
     async () => ({
       success: true,
       uploadEnabled: true,
-      executionEnabled: false,
+      executionEnabled: workerConfigured(),
       supportedRuntimes: ["nodejs"],
-      executionWorkerConnected: false,
-      message: "Projects can be uploaded and listed. Bot execution will be enabled after a secure isolated worker is connected."
+      executionWorkerConnected: workerConfigured(),
+      message: workerConfigured()
+        ? "Execution worker is configured. Project actions are available."
+        : "Uploads and project listing are ready. Configure a secure isolated worker to enable execution."
     })
   );
 }
