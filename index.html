@@ -994,6 +994,7 @@ a {
       <h2>Overview</h2>
       <p>Welcome to your NEVERLOSE ERA control panel.</p>
       <p id="dashboard-message">Sign in with Google to manage your projects.</p>
+      <p id="hosting-capability-status">Checking hosting engine...</p>
     </div>
 
     <!-- DEPLOYMENTS -->
@@ -1140,23 +1141,51 @@ function renderBotList() {
   `).join("");
 }
 
-// LOAD PROJECTS FROM SUPABASE
+// AUTHENTICATED HOSTING ENGINE REQUEST
+const HOSTING_API = "https://neverlose-era-host.onrender.com";
+
+async function hostingRequest(path) {
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) throw error;
+  const token = data.session?.access_token;
+  if (!token) throw new Error("Your session expired. Please sign in again.");
+
+  const response = await fetch(HOSTING_API + path, {
+    headers: { Authorization: "Bearer " + token }
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || "Hosting API request failed.");
+  return result;
+}
+
+// LOAD PROJECTS THROUGH THE AUTHENTICATED BACKEND
 async function loadBots() {
   if (!currentUser) return;
 
-  const { data, error } = await supabaseClient
-    .from("bots")
-    .select("*")
-    .eq("owner_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
+  try {
+    const result = await hostingRequest("/api/projects");
+    userBots = result.projects || [];
+    renderBotList();
+    showDashboardMessage("Your projects are connected to the hosting engine.");
+  } catch (error) {
     showDashboardMessage("Could not load projects: " + error.message);
-    return;
   }
+}
 
-  userBots = data || [];
-  renderBotList();
+// SHOW REAL EXECUTION AVAILABILITY
+async function loadHostingCapabilities() {
+  const status = document.getElementById("hosting-capability-status");
+  if (!status || !currentUser) return;
+
+  status.textContent = "Checking hosting engine...";
+  try {
+    const result = await hostingRequest("/api/hosting/capabilities");
+    status.textContent = result.executionEnabled
+      ? "Bot execution worker is connected."
+      : "Uploads and project listing are ready. Bot execution is not enabled yet; secure worker setup is next.";
+  } catch (error) {
+    status.textContent = "Hosting status unavailable: " + error.message;
+  }
 }
 
 // UPDATE ACCOUNT DISPLAY
@@ -1384,7 +1413,7 @@ async function initializeDashboard() {
   updateAccountDisplay();
 
   if (currentUser) {
-    await loadBots();
+    await Promise.all([loadBots(), loadHostingCapabilities()]);
   }
 }
 
@@ -1395,7 +1424,7 @@ supabaseClient.auth.onAuthStateChange(
     updateAccountDisplay();
 
     if (currentUser) {
-      await loadBots();
+      await Promise.all([loadBots(), loadHostingCapabilities()]);
     }
   }
 );
