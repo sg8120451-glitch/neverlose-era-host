@@ -38,7 +38,7 @@ export default async function routes(app) {
 
       const { data, error } = await supabase
         .from("bots")
-        .select("id, name, status, runtime, created_at")
+        .select("id, name, status, runtime, created_at, storage_path")
         .eq("owner_id", request.user.id)
         .order("created_at", { ascending: false })
         .limit(100);
