@@ -937,4 +937,164 @@ a {
     <small>© 2026 NEVERLOSE ERA. All rights reserved.</small>
   </div>
 </footer>
+
+<!-- CUSTOMER DASHBOARD -->
+<section id="dashboard" class="section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">CONTROL CENTER</span>
+      <h2>Your Hosting Dashboard</h2>
+      <p>Manage your Discord bot projects.</p>
+    </div>
+
+    <div class="feature-card">
+      <h2>Welcome to NEVERLOSE ERA</h2>
+      <p id="account-email">You are not signed in.</p>
+      <button class="btn" id="google-login-dashboard" type="button">
+        Continue with Google
+      </button>
+      <button class="btn" id="logout-button" type="button" hidden>
+        Sign Out
+      </button>
+    </div>
+
+    <div class="features-grid" style="margin-top:24px;">
+      <article class="feature-card">
+        <h3>Account</h3>
+        <p id="account-status">Checking sign-in status...</p>
+      </article>
+      <article class="feature-card">
+        <h3>Projects</h3>
+        <h2 id="bot-count">0</h2>
+        <p>Uploaded bot projects</p>
+      </article>
+      <article class="feature-card">
+        <h3>Storage</h3>
+        <h2>25 MB</h2>
+        <p>Maximum upload size per ZIP file</p>
+      </article>
+    </div>
+
+    <!-- DASHBOARD MENU -->
+    <div class="feature-card" style="margin-top:24px;">
+      <h3>Dashboard Menu</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+        <button class="btn dashboard-tab" data-panel="overview-panel" type="button">Overview</button>
+        <button class="btn dashboard-tab" data-panel="deployments-panel" type="button">Deployments</button>
+        <button class="btn dashboard-tab" data-panel="uploads-panel" type="button">Files & Uploads</button>
+        <button class="btn dashboard-tab" data-panel="console-panel" type="button">Console</button>
+        <button class="btn dashboard-tab" data-panel="variables-panel" type="button">Variables</button>
+        <button class="btn dashboard-tab" data-panel="backups-panel" type="button">Backups</button>
+        <button class="btn dashboard-tab" data-panel="settings-panel" type="button">Settings</button>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="feature-card dashboard-panel" id="overview-panel" style="margin-top:20px;">
+      <h2>Overview</h2>
+      <p>Welcome to your NEVERLOSE ERA control panel.</p>
+      <p id="dashboard-message">Sign in with Google to manage your projects.</p>
+    </div>
+
+    <!-- DEPLOYMENTS -->
+    <div class="feature-card dashboard-panel" id="deployments-panel" style="margin-top:20px;display:none;">
+      <h2>Deployments</h2>
+      <p>Uploaded projects will appear below. Uploading does not start a bot process.</p>
+      <div id="bot-list">
+        <p>No projects loaded yet.</p>
+      </div>
+    </div>
+
+    <!-- UPLOADS -->
+    <div class="feature-card dashboard-panel" id="uploads-panel" style="margin-top:20px;display:none;">
+      <h2>Upload Bot Project</h2>
+      <p>Upload a ZIP file. Maximum size: 25 MB.</p>
+
+      <label for="runtime-select">Bot Language</label>
+      <select id="runtime-select" style="width:100%;margin:10px 0;">
+        <option value="nodejs">JavaScript / Node.js</option>
+        <option value="python">Python</option>
+      </select>
+
+      <label for="bot-name">Project Name</label>
+      <input id="bot-name" type="text" maxlength="60"
+        placeholder="Enter your bot name" style="width:100%;margin:10px 0;">
+
+      <label for="bot-zip">Select ZIP File</label>
+      <input id="bot-zip" type="file" accept=".zip,application/zip"
+        style="display:block;margin:12px 0;">
+
+      <button class="btn" id="upload-button" type="button">
+        Upload Project
+      </button>
+      <p id="upload-status" role="status" aria-live="polite"></p>
+    </div>
+
+    <!-- FUTURE FEATURES -->
+    <div class="feature-card dashboard-panel" id="console-panel" style="margin-top:20px;display:none;">
+      <h2>Console</h2>
+      <p>Live process console is not connected yet.</p>
+    </div>
+
+    <div class="feature-card dashboard-panel" id="variables-panel" style="margin-top:20px;display:none;">
+      <h2>Environment Variables</h2>
+      <p>Secure environment-variable management is planned.</p>
+    </div>
+
+    <div class="feature-card dashboard-panel" id="backups-panel" style="margin-top:20px;display:none;">
+      <h2>Backups</h2>
+      <p>Project backup tools are planned.</p>
+    </div>
+
+    <div class="feature-card dashboard-panel" id="settings-panel" style="margin-top:20px;display:none;">
+      <h2>Settings</h2>
+      <p>Account and project settings will be added here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUPABASE CLIENT -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://tntpedvbxyhoutzxznlw.supabase.co";
+const SUPABASE_PUBLIC_KEY = "sb_publishable_WPvtzp4Ji2A854bwY2adcQ_tHnL4ggE";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLIC_KEY
+);
+
+let currentUser = null;
+let userBots = [];
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[char];
+  });
+}
+
+function showDashboardMessage(message) {
+  const element = document.getElementById("dashboard-message");
+  if (element) element.textContent = message;
+}
+
+async function signInWithGoogle() {
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin
+    }
+  });
+
+  if (error) {
+    alert("Google login failed: " + error.message);
+  }
+}
+  
   
