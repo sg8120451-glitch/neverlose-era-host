@@ -1,6 +1,7 @@
 name: Execution worker tests
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "execution-worker/**"
@@ -16,6 +17,7 @@ permissions:
 jobs:
   worker-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
