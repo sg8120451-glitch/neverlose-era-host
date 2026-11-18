@@ -707,6 +707,7 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
 #dashboard #console-output{background:#080d12!important;color:#9ce8c9!important;border:1px solid #253b37;border-radius:10px;min-height:220px;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace}
 #dashboard #bot-list>.feature-card{background:var(--surface2)}#dashboard .preview-stat{background:var(--surface2);border:1px solid var(--border)}#dashboard .preview-stat strong{font-size:18px}
 #dashboard .dashboard-panel label{display:block;margin-top:13px;color:var(--muted);font-size:12px;font-weight:700}#dashboard .dashboard-panel [role=status]{color:var(--accent)}
+.account-menu-wrap{position:relative}.account-menu{position:absolute;right:0;top:48px;width:210px;padding:7px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 45px rgba(0,0,0,.3);z-index:300}.account-menu[hidden]{display:none}.account-menu button{display:block;width:100%;text-align:left;padding:11px 12px;border:0;border-radius:8px;background:transparent;color:var(--text);font-weight:700;font-size:13px}.account-menu button:hover{background:var(--surface2);color:var(--accent)}#profile-avatar-preview[src=""]{visibility:hidden}
 @media(min-width:900px){#dashboard .dashboard-panel{padding:26px}#dashboard .dashboard-tab{min-width:88px}}
 @media(max-width:650px){#dashboard .section-heading{margin-bottom:18px}#dashboard .feature-card{padding:19px}#dashboard .dashboard-tab{padding:9px 11px}#dashboard #console-output{min-height:190px;font-size:11px}}
 
@@ -733,8 +734,19 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
     <div class="nav-actions">
       <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle theme">☀</button>
       <button class="btn btn-primary" id="navLoginBtn" type="button">Login / Sign Up</button>
+      <div class="account-menu-wrap">
+        <button class="theme-btn" id="accountMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">⋮</button>
+        <div class="account-menu" id="accountMenu" hidden>
+          <button type="button" id="menuDashboard">▦ &nbsp; Dashboard</button>
+          <button type="button" id="menuProfile">◉ &nbsp; My Profile</button>
+          <button type="button" id="menuSettings">⚙ &nbsp; Account Settings</button>
+          <button type="button" id="menuTheme">◐ &nbsp; Change Theme</button>
+          <button type="button" id="menuSignOut" hidden>↪ &nbsp; Sign Out</button>
+        </div>
+      </div>
       <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">☰</button>
     </div>
+  </div>
   </div>
 </header>
 
@@ -1016,6 +1028,26 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
       </div>
     </div>
 
+    <!-- PROFILE -->
+    <div class="feature-card dashboard-panel" id="profile-panel" style="margin-top:20px;display:none;">
+      <h2>My Profile</h2>
+      <p>Update the public-facing details saved to your signed-in account.</p>
+      <div style="display:flex;align-items:center;gap:16px;margin:18px 0;">
+        <img id="profile-avatar-preview" alt="Profile avatar" src="" style="width:76px;height:76px;border-radius:50%;object-fit:cover;background:var(--surface2);border:2px solid var(--border);">
+        <div><strong id="profile-name-preview">Your profile</strong><p id="profile-email-preview"></p></div>
+      </div>
+      <label for="profile-display-name">Display Name</label>
+      <input id="profile-display-name" maxlength="50" placeholder="Your display name" style="width:100%;margin:8px 0;">
+      <label for="profile-username">Username</label>
+      <input id="profile-username" maxlength="24" placeholder="username" style="width:100%;margin:8px 0;">
+      <label for="profile-avatar-url">Avatar Image URL</label>
+      <input id="profile-avatar-url" type="url" maxlength="500" placeholder="https://example.com/avatar.png" style="width:100%;margin:8px 0;">
+      <label for="profile-bio">About Me</label>
+      <textarea id="profile-bio" maxlength="160" rows="3" placeholder="A little about yourself..." style="width:100%;margin:8px 0;"></textarea>
+      <button class="btn" id="save-profile-button" type="button">Save Profile</button>
+      <p id="profile-save-status" role="status" aria-live="polite"></p>
+    </div>
+
     <!-- OVERVIEW -->
     <div class="feature-card dashboard-panel" id="overview-panel" style="margin-top:20px;">
       <h2>Overview</h2>
@@ -1262,8 +1294,15 @@ function updateAccountDisplay() {
   const loginButton = document.getElementById("google-login-dashboard");
   const logoutButton = document.getElementById("logout-button");
   const navLoginButton = document.getElementById("navLoginBtn");
+  const menuSignOut = document.getElementById("menuSignOut");
+  const menuDashboard = document.getElementById("menuDashboard");
+  const menuProfile = document.getElementById("menuProfile");
 
   if (navLoginButton) navLoginButton.textContent = currentUser ? "Dashboard" : "Login / Sign Up";
+  if (menuSignOut) menuSignOut.hidden = !currentUser;
+  if (menuDashboard) menuDashboard.disabled = !currentUser;
+  if (menuProfile) menuProfile.disabled = !currentUser;
+  if (currentUser) populateProfileFields();
 
   if (currentUser) {
     if (email) email.textContent = currentUser.email || "Signed in";
@@ -1371,6 +1410,55 @@ async function uploadBotProject() {
   }
 }
 
+// PROFILE: use Supabase Auth metadata; no extra database table is required.
+function populateProfileFields() {
+  if (!currentUser) return;
+  const meta = currentUser.user_metadata || {};
+  const displayName = meta.display_name || meta.full_name || currentUser.email?.split("@")[0] || "";
+  const username = meta.username || "";
+  const avatar = meta.avatar_url || meta.picture || "";
+  document.getElementById("profile-display-name").value = displayName;
+  document.getElementById("profile-username").value = username;
+  document.getElementById("profile-avatar-url").value = avatar;
+  document.getElementById("profile-bio").value = meta.bio || "";
+  document.getElementById("profile-name-preview").textContent = displayName || "Your profile";
+  document.getElementById("profile-email-preview").textContent = currentUser.email || "";
+  const preview = document.getElementById("profile-avatar-preview");
+  preview.src = avatar || "";
+  preview.onerror = () => { preview.removeAttribute("src"); };
+}
+async function saveProfile() {
+  if (!currentUser) { alert("Please sign in first."); return; }
+  const status = document.getElementById("profile-save-status");
+  const displayName = document.getElementById("profile-display-name").value.trim();
+  const username = document.getElementById("profile-username").value.trim().replace(/^@/, "");
+  const avatar = document.getElementById("profile-avatar-url").value.trim();
+  const bio = document.getElementById("profile-bio").value.trim();
+  if (!displayName) { status.textContent = "Please enter a display name."; return; }
+  if (username && !/^[a-zA-Z0-9_]{3,24}$/.test(username)) {
+    status.textContent = "Username must be 3–24 characters: letters, numbers or underscores.";
+    return;
+  }
+  if (avatar && !/^https:\/\//i.test(avatar)) {
+    status.textContent = "Avatar URL must start with https://.";
+    return;
+  }
+  const button = document.getElementById("save-profile-button");
+  button.disabled = true; status.textContent = "Saving profile...";
+  try {
+    const { data, error } = await supabaseClient.auth.updateUser({
+      data: { display_name: displayName, username, avatar_url: avatar, bio }
+    });
+    if (error) throw error;
+    currentUser = data.user || currentUser;
+    populateProfileFields();
+    status.textContent = "Profile saved successfully.";
+  } catch (error) {
+    status.textContent = "Could not save profile: " + error.message;
+  } finally { button.disabled = false; }
+}
+document.getElementById("save-profile-button")?.addEventListener("click", saveProfile);
+
 // HEADER ACCOUNT BUTTON
 document.getElementById("navLoginBtn")?.addEventListener("click", () => {
   if (currentUser) {
@@ -1378,6 +1466,45 @@ document.getElementById("navLoginBtn")?.addEventListener("click", () => {
   } else {
     signInWithGoogle();
   }
+});
+
+// THREE-DOT ACCOUNT MENU
+const accountMenu = document.getElementById("accountMenu");
+const accountMenuButton = document.getElementById("accountMenuButton");
+function closeAccountMenu() {
+  accountMenu.hidden = true;
+  accountMenuButton.setAttribute("aria-expanded", "false");
+}
+accountMenuButton?.addEventListener("click", () => {
+  const opening = accountMenu.hidden;
+  accountMenu.hidden = !opening;
+  accountMenuButton.setAttribute("aria-expanded", String(opening));
+});
+document.addEventListener("click", event => {
+  if (!event.target.closest(".account-menu-wrap")) closeAccountMenu();
+});
+document.getElementById("menuDashboard")?.addEventListener("click", () => {
+  if (!currentUser) { signInWithGoogle(); return; }
+  document.getElementById("dashboard")?.scrollIntoView({behavior:"smooth"});
+  showDashboardPanel("overview-panel"); closeAccountMenu();
+});
+document.getElementById("menuProfile")?.addEventListener("click", () => {
+  if (!currentUser) { signInWithGoogle(); return; }
+  document.getElementById("dashboard")?.scrollIntoView({behavior:"smooth"});
+  showDashboardPanel("profile-panel"); closeAccountMenu();
+});
+document.getElementById("menuSettings")?.addEventListener("click", () => {
+  if (!currentUser) { signInWithGoogle(); return; }
+  document.getElementById("dashboard")?.scrollIntoView({behavior:"smooth"});
+  showDashboardPanel("settings-panel"); closeAccountMenu();
+});
+document.getElementById("menuTheme")?.addEventListener("click", () => {
+  document.getElementById("themeToggle")?.click(); closeAccountMenu();
+});
+document.getElementById("menuSignOut")?.addEventListener("click", async () => {
+  closeAccountMenu();
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) alert("Sign out failed: " + error.message);
 });
 
 // GOOGLE LOGIN BUTTON
