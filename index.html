@@ -1270,6 +1270,142 @@ async function uploadBotProject() {
     uploadButton.disabled = false;
   }
 }
+
+// GOOGLE LOGIN BUTTON
+document.getElementById("google-login-dashboard")
+  ?.addEventListener("click", signInWithGoogle);
+
+// LOGOUT BUTTON
+document.getElementById("logout-button")
+  ?.addEventListener("click", async () => {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+      alert("Logout failed: " + error.message);
+    }
+  });
+
+// DASHBOARD NAVIGATION
+document.querySelectorAll(".dashboard-tab").forEach(button => {
+  button.addEventListener("click", () => {
+    showDashboardPanel(button.dataset.panel);
+  });
+});
+
+// UPLOAD BUTTON
+document.getElementById("upload-button")
+  ?.addEventListener("click", uploadBotProject);
+
+// DOWNLOAD AND DELETE PROJECTS
+document.getElementById("bot-list")
+  ?.addEventListener("click", async event => {
+    const downloadButton = event.target.closest(".download-bot");
+    const deleteButton = event.target.closest(".delete-bot");
+
+    if (downloadButton) {
+      const bot = userBots.find(
+        item => String(item.id) === downloadButton.dataset.id
+      );
+
+      if (!bot || !bot.storage_path) {
+        alert("Project file not found.");
+        return;
+      }
+
+      downloadButton.disabled = true;
+
+      const { data, error } = await supabaseClient
+        .storage
+        .from("bot-uploads")
+        .createSignedUrl(bot.storage_path, 60);
+
+      downloadButton.disabled = false;
+
+      if (error) {
+        alert("Download failed: " + error.message);
+        return;
+      }
+
+      window.open(data.signedUrl, "_blank", "noopener");
+    }
+
+    if (deleteButton) {
+      const bot = userBots.find(
+        item => String(item.id) === deleteButton.dataset.id
+      );
+
+      if (!bot) return;
+
+      const confirmed = confirm(
+        "Are you sure you want to delete " + bot.name + "?"
+      );
+
+      if (!confirmed) return;
+
+      deleteButton.disabled = true;
+
+      const { error: dbError } = await supabaseClient
+        .from("bots")
+        .delete()
+        .eq("id", bot.id)
+        .eq("owner_id", currentUser.id);
+
+      if (dbError) {
+        alert("Delete failed: " + dbError.message);
+        deleteButton.disabled = false;
+        return;
+      }
+
+      if (bot.storage_path) {
+        const { error: storageError } = await supabaseClient
+          .storage
+          .from("bot-uploads")
+          .remove([bot.storage_path]);
+
+        if (storageError) {
+          alert("Project record deleted, but its stored file could not be removed: " + storageError.message);
+        }
+      }
+
+      await loadBots();
+    }
+  });
+
+// CHECK LOGIN SESSION
+async function initializeDashboard() {
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    showDashboardMessage("Could not check login: " + error.message);
+    return;
+  }
+
+  currentUser = data.session?.user || null;
+  updateAccountDisplay();
+
+  if (currentUser) {
+    await loadBots();
+  }
+}
+
+// LISTEN FOR LOGIN / LOGOUT CHANGES
+supabaseClient.auth.onAuthStateChange(
+  async (_event, session) => {
+    currentUser = session?.user || null;
+    updateAccountDisplay();
+
+    if (currentUser) {
+      await loadBots();
+    }
+  }
+);
+
+// START WEBSITE DASHBOARD
+initializeDashboard();
+</script>
+</body>
+</html>
+
   
   
   
