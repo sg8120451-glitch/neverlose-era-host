@@ -201,6 +201,15 @@ a {
 .nav-links a:hover {
   color:var(--text);
 }
+.nav-menu-action {
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font:700 13px inherit;
+  cursor:pointer;
+}
+.nav-menu-action:hover { color:var(--text); }
 
 .nav-actions {
   display:flex;
@@ -729,21 +738,16 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
       <a href="#how-it-works">How It Works</a>
       <a href="#plans">Plans</a>
       <a href="#faq">FAQ</a>
+      <button type="button" class="nav-menu-action" id="menuDashboard">▦ Dashboard</button>
+      <button type="button" class="nav-menu-action" id="menuProfile">◉ My Profile</button>
+      <button type="button" class="nav-menu-action" id="menuSettings">⚙ Account Settings</button>
+      <button type="button" class="nav-menu-action" id="menuTheme">◐ Change Theme</button>
+      <button type="button" class="nav-menu-action" id="menuSignOut" hidden>↪ Sign Out</button>
     </nav>
 
     <div class="nav-actions">
       <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle theme">☀</button>
       <button class="btn btn-primary" id="navLoginBtn" type="button">Login / Sign Up</button>
-      <div class="account-menu-wrap">
-        <button class="theme-btn" id="accountMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">⋮</button>
-        <div class="account-menu" id="accountMenu" hidden>
-          <button type="button" id="menuDashboard">▦ &nbsp; Dashboard</button>
-          <button type="button" id="menuProfile">◉ &nbsp; My Profile</button>
-          <button type="button" id="menuSettings">⚙ &nbsp; Account Settings</button>
-          <button type="button" id="menuTheme">◐ &nbsp; Change Theme</button>
-          <button type="button" id="menuSignOut" hidden>↪ &nbsp; Sign Out</button>
-        </div>
-      </div>
       <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">☰</button>
     </div>
   </div>
@@ -1467,43 +1471,37 @@ document.getElementById("navLoginBtn")?.addEventListener("click", () => {
   }
 });
 
-// THREE-DOT ACCOUNT MENU
-const accountMenu = document.getElementById("accountMenu");
-const accountMenuButton = document.getElementById("accountMenuButton");
-function closeAccountMenu() {
-  accountMenu.hidden = true;
-  accountMenuButton.setAttribute("aria-expanded", "false");
-}
-accountMenuButton?.addEventListener("click", () => {
-  const opening = accountMenu.hidden;
-  accountMenu.hidden = !opening;
-  accountMenuButton.setAttribute("aria-expanded", String(opening));
+// EXISTING NAVIGATION MENU: ACCOUNT SHORTCUTS
+document.getElementById("mobileMenuBtn")?.addEventListener("click", () => {
+  document.getElementById("navLinks")?.classList.toggle("open");
 });
-document.addEventListener("click", event => {
-  if (!event.target.closest(".account-menu-wrap")) closeAccountMenu();
+document.querySelectorAll("#navLinks a").forEach(link => {
+  link.addEventListener("click", () => document.getElementById("navLinks")?.classList.remove("open"));
 });
 document.getElementById("menuDashboard")?.addEventListener("click", () => {
   if (!currentUser) { signInWithGoogle(); return; }
   document.getElementById("dashboard")?.scrollIntoView({behavior:"smooth"});
-  showDashboardPanel("overview-panel"); closeAccountMenu();
+  showDashboardPanel("overview-panel");
 });
 document.getElementById("menuProfile")?.addEventListener("click", () => {
   if (!currentUser) { signInWithGoogle(); return; }
   document.getElementById("dashboard")?.scrollIntoView({behavior:"smooth"});
-  showDashboardPanel("profile-panel"); closeAccountMenu();
+  showDashboardPanel("profile-panel");
 });
 document.getElementById("menuSettings")?.addEventListener("click", () => {
   if (!currentUser) { signInWithGoogle(); return; }
   document.getElementById("dashboard")?.scrollIntoView({behavior:"smooth"});
-  showDashboardPanel("settings-panel"); closeAccountMenu();
+  showDashboardPanel("settings-panel");
 });
 document.getElementById("menuTheme")?.addEventListener("click", () => {
-  document.getElementById("themeToggle")?.click(); closeAccountMenu();
+  document.getElementById("themeToggle")?.click();
 });
 document.getElementById("menuSignOut")?.addEventListener("click", async () => {
-  closeAccountMenu();
   const { error } = await supabaseClient.auth.signOut();
   if (error) alert("Sign out failed: " + error.message);
+});
+document.querySelectorAll("#navLinks .nav-menu-action").forEach(button => {
+  button.addEventListener("click", () => document.getElementById("navLinks")?.classList.remove("open"));
 });
 
 // GOOGLE LOGIN BUTTON
