@@ -1096,5 +1096,180 @@ async function signInWithGoogle() {
     alert("Google login failed: " + error.message);
   }
 }
+
+// SWITCH DASHBOARD PANELS
+function showDashboardPanel(panelId) {
+  document.querySelectorAll(".dashboard-panel").forEach(panel => {
+    panel.style.display = panel.id === panelId ? "block" : "none";
+  });
+}
+
+// RENDER BOT PROJECTS
+function renderBotList() {
+  const botList = document.getElementById("bot-list");
+  const botCount = document.getElementById("bot-count");
+
+  if (botCount) {
+    botCount.textContent = userBots.length;
+  }
+
+  if (!botList) return;
+
+  if (userBots.length === 0) {
+    botList.innerHTML = "<p>No uploaded projects yet.</p>";
+    return;
+  }
+
+  botList.innerHTML = userBots.map(bot => `
+    <div class="feature-card" style="margin-top:14px;">
+      <h3>${escapeHTML(bot.name)}</h3>
+      <p>Language: ${escapeHTML(bot.runtime || "Not specified")}</p>
+      <p>Status: ${escapeHTML(bot.status || "Stored")}</p>
+      <p>Created: ${escapeHTML(
+        bot.created_at
+          ? new Date(bot.created_at).toLocaleDateString()
+          : "Unknown"
+      )}</p>
+      <button class="btn download-bot" data-id="${escapeHTML(bot.id)}" type="button">
+        Download ZIP
+      </button>
+      <button class="btn delete-bot" data-id="${escapeHTML(bot.id)}" type="button">
+        Delete Project
+      </button>
+    </div>
+  `).join("");
+}
+
+// LOAD PROJECTS FROM SUPABASE
+async function loadBots() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabaseClient
+    .from("bots")
+    .select("*")
+    .eq("owner_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    showDashboardMessage("Could not load projects: " + error.message);
+    return;
+  }
+
+  userBots = data || [];
+  renderBotList();
+}
+
+// UPDATE ACCOUNT DISPLAY
+function updateAccountDisplay() {
+  const email = document.getElementById("account-email");
+  const status = document.getElementById("account-status");
+  const loginButton = document.getElementById("google-login-dashboard");
+  const logoutButton = document.getElementById("logout-button");
+
+  if (currentUser) {
+    if (email) email.textContent = currentUser.email || "Signed in";
+    if (status) status.textContent = "Signed in";
+    if (loginButton) loginButton.hidden = true;
+    if (logoutButton) logoutButton.hidden = false;
+
+    showDashboardMessage("Your account is ready.");
+  } else {
+    if (email) email.textContent = "You are not signed in.";
+    if (status) status.textContent = "Not signed in";
+    if (loginButton) loginButton.hidden = false;
+    if (logoutButton) logoutButton.hidden = true;
+
+    userBots = [];
+    renderBotList();
+    showDashboardMessage("Sign in with Google to manage your projects.");
+  }
+}
+
+// UPLOAD BOT ZIP
+async function uploadBotProject() {
+  if (!currentUser) {
+    alert("Please sign in with Google first.");
+    return;
+  }
+
+  const nameInput = document.getElementById("bot-name");
+  const fileInput = document.getElementById("bot-zip");
+  const runtimeInput = document.getElementById("runtime-select");
+  const statusElement = document.getElementById("upload-status");
+  const uploadButton = document.getElementById("upload-button");
+
+  const file = fileInput.files[0];
+  const projectName = nameInput.value.trim();
+  const runtime = runtimeInput.value;
+
+  if (!projectName) {
+    statusElement.textContent = "Please enter a project name.";
+    return;
+  }
+
+  if (!file) {
+    statusElement.textContent = "Please select a ZIP file.";
+    return;
+  }
+
+  if (!file.name.toLowerCase().endsWith(".zip")) {
+    statusElement.textContent = "Only ZIP files are accepted.";
+    return;
+  }
+
+  if (file.size > 25 * 1024 * 1024) {
+    statusElement.textContent = "File size must be 25 MB or less.";
+    return;
+  }
+
+  uploadButton.disabled = true;
+  statusElement.textContent = "Uploading your project...";
+
+  try {
+    const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const storagePath =
+      currentUser.id + "/" + crypto.randomUUID() + "-" + safeFileName;
+
+    const { error: uploadError } = await supabaseClient
+      .storage
+      .from("bot-uploads")
+      .upload(storagePath, file, {
+        contentType: "application/zip",
+        upsert: false
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { error: insertError } = await supabaseClient
+      .from("bots")
+      .insert({
+        owner_id: currentUser.id,
+        name: projectName,
+        status: "stored",
+        runtime: runtime,
+        storage_path: storagePath
+      });
+
+    if (insertError) {
+      await supabaseClient.storage
+        .from("bot-uploads")
+        .remove([storagePath]);
+
+      throw insertError;
+    }
+
+    statusElement.textContent = "Project uploaded successfully!";
+    nameInput.value = "";
+    fileInput.value = "";
+
+    await loadBots();
+
+  } catch (error) {
+    statusElement.textContent = "Upload failed: " + error.message;
+  } finally {
+    uploadButton.disabled = false;
+  }
+}
+  
   
   
