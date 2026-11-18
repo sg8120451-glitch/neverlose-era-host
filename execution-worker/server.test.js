@@ -82,3 +82,34 @@ test("valid requests still fail closed while no isolated runtime exists", async 
     assert.match(response.json().error, /Execution is disabled/);
   });
 });
+
+test("execution remains disabled even if the configuration flag is accidentally enabled", async () => {
+  const unsafeEnv = { ...env, EXECUTION_ENABLED: "true" };
+  const app = createApp(unsafeEnv);
+  try {
+    await app.ready();
+    const health = await app.inject({ method: "GET", url: "/health" });
+    assert.equal(health.json().executionEnabled, false);
+    assert.equal(health.json().executionConfigured, true);
+    const response = await app.inject({
+      method: "POST", url: "/v1/projects/start",
+      headers: { authorization: "Bearer " + unsafeEnv.EXECUTION_WORKER_TOKEN },
+      payload
+    });
+    assert.equal(response.statusCode, 503);
+    assert.match(response.json().error, /No execution runtime is installed/);
+  } finally {
+    await app.close();
+  }
+});
+
+test("unsigned storage URLs are rejected", async () => {
+  await withApp(async (app) => {
+    const response = await app.inject({
+      method: "POST", url: "/v1/projects/start",
+      headers: { authorization: "Bearer " + env.EXECUTION_WORKER_TOKEN },
+      payload: { ...payload, archiveUrl: "https://example.supabase.co/storage/v1/object/sign/bot-uploads/user/test.zip" }
+    });
+    assert.equal(response.statusCode, 400);
+  });
+});
