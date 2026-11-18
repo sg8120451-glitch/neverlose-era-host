@@ -1,4 +1,3 @@
-
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -26,7 +25,6 @@ export async function requireAuth(request, reply) {
   }
 
   const token = authorization.slice(7);
-
   const { data, error } = await supabase.auth.getUser(token);
 
   if (error || !data.user) {
@@ -36,4 +34,5 @@ export async function requireAuth(request, reply) {
   }
 
   request.user = data.user;
-    }
+  request.accessToken = token;
+}
