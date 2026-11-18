@@ -1,0 +1,31 @@
+name: Execution worker tests
+
+on:
+  push:
+    paths:
+      - "execution-worker/**"
+      - ".github/workflows/execution-worker-tests.yml"
+  pull_request:
+    paths:
+      - "execution-worker/**"
+      - ".github/workflows/execution-worker-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  worker-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install worker dependencies
+        working-directory: execution-worker
+        run: npm install --ignore-scripts
+      - name: Run worker security tests
+        working-directory: execution-worker
+        run: npm test
