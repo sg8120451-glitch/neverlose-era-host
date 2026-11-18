@@ -1093,6 +1093,24 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
       <p id="upload-status" role="status" aria-live="polite"></p>
     </div>
 
+    <!-- EXTERNAL HOKAS DEPLOYMENT GUIDE -->
+    <div class="feature-card dashboard-panel" id="hokas-panel" style="margin-top:20px;display:none;">
+      <h2>Deploy with HOKAS</h2>
+      <p id="hokas-project-label">Use your own HOKAS account to run this project in a separate HOKAS container.</p>
+      <ol style="padding-left:22px;margin:16px 0;color:var(--muted);">
+        <li style="margin:9px 0;">Download the project ZIP from the Servers panel.</li>
+        <li style="margin:9px 0;">Open HOKAS and create your own Node.js server: <a href="https://hokas.net/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">HOKAS website</a>.</li>
+        <li style="margin:9px 0;">Upload the ZIP using the HOKAS file manager and extract it using the panel's supported file tools.</li>
+        <li style="margin:9px 0;">Add your Discord bot token in HOKAS Settings → Environment Variables. Never put the token in your ZIP or share it with NEVERLOSE ERA.</li>
+        <li style="margin:9px 0;">Use HOKAS's Command Builder to configure the correct Node.js start command for your entry file, save it, then run it.</li>
+        <li style="margin:9px 0;">Check the HOKAS console for startup output and errors.</li>
+      </ol>
+      <p><strong>Free-plan limits:</strong> HOKAS currently lists 0.3 vCPU, 256 MB RAM, 512 MB disk and up to 3 servers per account. Free runtime uses an ad-based time allowance and is not guaranteed 24/7. HOKAS policy permits only one Discord bot per server.</p>
+      <p><strong>Important:</strong> This is a manual external deployment guide, not a direct HOKAS API connection. Start/Stop/Restart and live logs inside NEVERLOSE ERA remain unavailable until HOKAS confirms an official integration API.</p>
+      <p style="margin-top:14px;"><a href="https://docs.hokas.net/how-do-i-deploy-my-discord-bot" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Official HOKAS Discord bot deployment guide</a></p>
+      <button class="btn" id="hokas-back-to-servers" type="button">Back to Servers</button>
+    </div>
+
     <!-- FUTURE FEATURES -->
     <div class="feature-card dashboard-panel" id="console-panel" style="margin-top:20px;display:none;">
       <h2>Server Console</h2>
@@ -1226,6 +1244,7 @@ function renderBotList() {
         <button class="btn project-action" data-action="restart" data-id="${escapeHTML(bot.id)}" type="button" ${executionAvailable ? "" : "disabled"}>Restart</button>
         <button class="btn project-action" data-action="logs" data-id="${escapeHTML(bot.id)}" type="button" ${executionAvailable ? "" : "disabled"}>View Logs</button>
         <button class="btn download-bot" data-id="${escapeHTML(bot.id)}" type="button">Download ZIP</button>
+        <button class="btn hokas-guide" data-id="${escapeHTML(bot.id)}" type="button">HOKAS Setup Guide</button>
         <button class="btn delete-bot" data-id="${escapeHTML(bot.id)}" type="button">Delete Project</button>
       </div>
     </div>
@@ -1555,6 +1574,18 @@ document.getElementById("bot-list")?.addEventListener("click", async event => {
     button.disabled = false;
   }
 });
+
+// HOKAS MANUAL DEPLOYMENT GUIDE
+document.getElementById("bot-list")?.addEventListener("click", event => {
+  const guideButton = event.target.closest(".hokas-guide");
+  if (!guideButton) return;
+  const bot = userBots.find(item => String(item.id) === guideButton.dataset.id);
+  if (!bot) return;
+  const label = document.getElementById("hokas-project-label");
+  if (label) label.textContent = "Selected project: " + bot.name + ". Download its ZIP from Servers, then follow these steps in your own HOKAS account.";
+  showDashboardPanel("hokas-panel");
+});
+document.getElementById("hokas-back-to-servers")?.addEventListener("click", () => showDashboardPanel("deployments-panel"));
 
 // DOWNLOAD AND DELETE PROJECTS
 document.getElementById("bot-list")
