@@ -752,7 +752,7 @@ a {
           </div>
           <div class="preview-stat">
             <span>Supported Runtime</span>
-            <strong>JS / PY</strong>
+            <strong>Node.js</strong>
           </div>
           <div class="preview-stat">
             <span>File Storage</span>
@@ -785,11 +785,7 @@ a {
         <p>Organize Node.js projects, including bots built with discord.js.</p>
       </article>
 
-      <article class="feature-card">
-        <div class="feature-icon">🐍</div>
-        <h3>Python Support</h3>
-        <p>Keep Python bot projects organized, including projects built with discord.py.</p>
-      </article>
+      
 
       <article class="feature-card">
         <div class="feature-icon">🔐</div>
@@ -819,7 +815,7 @@ a {
     <div class="section-heading">
       <span class="eyebrow">GET STARTED</span>
       <h2>How It Works</h2>
-      <p>Deploy your Discord bot in a few simple steps.</p>
+      <p>Upload and organize your Node.js bot project in a few simple steps.</p>
     </div>
 
     <div class="features-grid">
@@ -830,7 +826,7 @@ a {
 
       <article class="feature-card">
         <h3>02. Upload Your Bot</h3>
-        <p>Choose JavaScript or Python and upload your bot ZIP file.</p>
+        <p>Choose Node.js and upload your bot ZIP file.</p>
       </article>
 
       <article class="feature-card">
@@ -859,7 +855,7 @@ a {
           <li>Google account login</li>
           <li>Bot ZIP uploads</li>
           <li>Dashboard access</li>
-          <li>JavaScript and Python project options</li>
+          <li>Node.js project uploads</li>
         </ul>
         <a href="#dashboard" class="btn">Get Started</a>
       </article>
@@ -995,12 +991,13 @@ a {
       <p>Welcome to your NEVERLOSE ERA control panel.</p>
       <p id="dashboard-message">Sign in with Google to manage your projects.</p>
       <p id="hosting-capability-status">Checking hosting engine...</p>
+      <p id="hosting-worker-status" role="status" aria-live="polite">Execution worker status: checking...</p>
     </div>
 
     <!-- DEPLOYMENTS -->
     <div class="feature-card dashboard-panel" id="deployments-panel" style="margin-top:20px;display:none;">
       <h2>Deployments</h2>
-      <p>Uploaded projects will appear below. Uploading does not start a bot process.</p>
+      <p>Manage your uploaded Node.js projects. Runtime controls unlock only after a secure execution worker is verified.</p>
       <div id="bot-list">
         <p>No projects loaded yet.</p>
       </div>
@@ -1009,7 +1006,7 @@ a {
     <!-- UPLOADS -->
     <div class="feature-card dashboard-panel" id="uploads-panel" style="margin-top:20px;display:none;">
       <h2>Upload Bot Project</h2>
-      <p>Upload a ZIP file. Maximum size: 25 MB.</p>
+      <p>Upload a Node.js project ZIP file. Maximum size: 25 MB. Uploading stores your files; it does not start a bot.</p>
 
       <label for="runtime-select">Bot Language</label>
       <select id="runtime-select" style="width:100%;margin:10px 0;">
@@ -1033,7 +1030,8 @@ a {
     <!-- FUTURE FEATURES -->
     <div class="feature-card dashboard-panel" id="console-panel" style="margin-top:20px;display:none;">
       <h2>Console</h2>
-      <p>Live process console is not connected yet.</p>
+      <p id="console-project-label">Select a project to view its runtime logs.</p>
+      <pre id="console-output" style="white-space:pre-wrap;overflow:auto;max-height:360px;background:#080611;padding:16px;border-radius:12px;color:#cfc3ee;">No live console is connected yet.</pre>
     </div>
 
     <div class="feature-card dashboard-panel" id="variables-panel" style="margin-top:20px;display:none;">
@@ -1066,6 +1064,7 @@ const supabaseClient = window.supabase.createClient(
 
 let currentUser = null;
 let userBots = [];
+let executionAvailable = false;
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, function(char) {
@@ -1130,12 +1129,14 @@ function renderBotList() {
           ? new Date(bot.created_at).toLocaleDateString()
           : "Unknown"
       )}</p>
-      <button class="btn download-bot" data-id="${escapeHTML(bot.id)}" type="button">
-        Download ZIP
-      </button>
-      <button class="btn delete-bot" data-id="${escapeHTML(bot.id)}" type="button">
-        Delete Project
-      </button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+        <button class="btn project-action" data-action="start" data-id="${escapeHTML(bot.id)}" type="button" ${executionAvailable ? "" : "disabled"}>Start</button>
+        <button class="btn project-action" data-action="stop" data-id="${escapeHTML(bot.id)}" type="button" ${executionAvailable ? "" : "disabled"}>Stop</button>
+        <button class="btn project-action" data-action="restart" data-id="${escapeHTML(bot.id)}" type="button" ${executionAvailable ? "" : "disabled"}>Restart</button>
+        <button class="btn project-action" data-action="logs" data-id="${escapeHTML(bot.id)}" type="button" ${executionAvailable ? "" : "disabled"}>View Logs</button>
+        <button class="btn download-bot" data-id="${escapeHTML(bot.id)}" type="button">Download ZIP</button>
+        <button class="btn delete-bot" data-id="${escapeHTML(bot.id)}" type="button">Delete Project</button>
+      </div>
     </div>
   `).join("");
 }
@@ -1143,14 +1144,19 @@ function renderBotList() {
 // AUTHENTICATED HOSTING ENGINE REQUEST
 const HOSTING_API = "https://neverlose-era-host.onrender.com";
 
-async function hostingRequest(path) {
+async function hostingRequest(path, options = {}) {
   const { data, error } = await supabaseClient.auth.getSession();
   if (error) throw error;
   const token = data.session?.access_token;
   if (!token) throw new Error("Your session expired. Please sign in again.");
 
   const response = await fetch(HOSTING_API + path, {
-    headers: { Authorization: "Bearer " + token }
+    method: options.method || "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+      ...(options.body ? { "Content-Type": "application/json" } : {})
+    },
+    ...(options.body ? { body: JSON.stringify(options.body) } : {})
   });
   const result = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(result.error || "Hosting API request failed.");
@@ -1179,9 +1185,15 @@ async function loadHostingCapabilities() {
   status.textContent = "Checking hosting engine...";
   try {
     const result = await hostingRequest("/api/hosting/capabilities");
-    status.textContent = result.executionEnabled
-      ? "Bot execution worker is connected."
-      : "Uploads and project listing are ready. Bot execution is not enabled yet; secure worker setup is next.";
+    executionAvailable = result.executionEnabled === true;
+    status.textContent = executionAvailable
+      ? "Isolated bot execution is available."
+      : "Project uploads are available. Bot execution is not enabled yet.";
+    const workerStatus = document.getElementById("hosting-worker-status");
+    if (workerStatus) workerStatus.textContent = result.executionWorkerConnected
+      ? (executionAvailable ? "Execution worker: ready." : "Execution worker: connected, but execution is safely disabled.")
+      : "Execution worker: not connected.";
+    renderBotList();
   } catch (error) {
     status.textContent = "Hosting status unavailable: " + error.message;
   }
@@ -1335,6 +1347,33 @@ document.querySelectorAll(".dashboard-tab").forEach(button => {
 // UPLOAD BUTTON
 document.getElementById("upload-button")
   ?.addEventListener("click", uploadBotProject);
+
+// Project actions stay disabled until the backend confirms isolated execution is ready.
+document.getElementById("bot-list")?.addEventListener("click", async event => {
+  const button = event.target.closest(".project-action");
+  if (!button) return;
+  const bot = userBots.find(item => String(item.id) === button.dataset.id);
+  if (!bot || !executionAvailable) return;
+  const action = button.dataset.action;
+  button.disabled = true;
+  try {
+    const result = await hostingRequest("/api/projects/" + encodeURIComponent(bot.id) + "/" + action, {
+      method: "POST", body: {}
+    });
+    if (action === "logs") {
+      document.getElementById("console-project-label").textContent = "Logs: " + bot.name;
+      document.getElementById("console-output").textContent = result.logs || "No logs returned.";
+      showDashboardPanel("console-panel");
+    } else {
+      alert(result.message || ("Project " + action + " request accepted."));
+      await loadBots();
+    }
+  } catch (error) {
+    alert("Project " + action + " failed: " + error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
 
 // DOWNLOAD AND DELETE PROJECTS
 document.getElementById("bot-list")
