@@ -17,13 +17,12 @@ The API adapter in hosting-engine/routes.js calls authenticated POST endpoints: 
 9. Keep execution disabled until these controls are implemented and tested.
 
 ## Environment
-PORT is the HTTP port. EXECUTION_WORKER_TOKEN is a long random shared secret and must never be committed. EXECUTION_ENABLED must remain false until all isolation controls are implemented and reviewed.
+PORT is the HTTP port. EXECUTION_WORKER_TOKEN is a long random shared secret and must never be committed. EXECUTION_ENABLED must remain false until all isolation controls are implemented and reviewed. SUPABASE_URL identifies the one permitted archive origin.
 
-## Request validation implemented
-- The API refuses to send its shared token to a worker URL unless the configured URL is HTTPS and contains no embedded credentials, query, or fragment.
-- The worker validates action names, project/owner IDs, Node.js runtime, project name, and signed archive URL origin/path before accepting a request.
-- The archive URL must use the configured Supabase project origin and the signed `bot-uploads` storage path.
-- These checks do not make uploaded code safe to execute; the worker still fails closed and does not start containers.
+## Validation and tests
+The worker validates bearer authentication, allowed actions, UUID-shaped project and owner IDs, Node.js runtime, project name, and a signed archive URL from the configured Supabase bot-uploads bucket. Run npm test to execute the Node.js built-in test suite.
+
+The tests confirm the worker rejects invalid requests and continues returning 503 for valid execution requests while no isolated runtime is installed.
 
 ## Current status
-This folder documents the worker boundary. It is not yet a runnable hosting provider and bots cannot start. No paid provider has been selected.
+This folder is a fail-closed worker scaffold, not a runnable hosting provider. Bots cannot start yet. No paid provider has been selected.
