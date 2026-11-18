@@ -4,8 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b0718">
-<title>NEVERLOSE ERA | Premium Bot Hosting</title>
+<meta name="theme-color" content="#0b1016">
+<title>NEVERLOSE ERA | Bot Hosting Control Panel</title>
 <meta name="description" content="Manage your Discord bots with NEVERLOSE ERA.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -690,6 +690,25 @@ a {
     align-items:flex-start;
   }
 }
+/* NEVERLOSE ERA HOKAS-inspired control-panel theme */
+:root{--bg:#0b1016;--surface:#111923;--surface2:#17232e;--text:#edf5f7;--muted:#91a2ad;--border:#263641;--accent:#36d6a4;--blue:#42b9d8;--glow:rgba(54,214,164,.14);--success:#36d6a4;--danger:#ff6b7c;--header:rgba(11,16,22,.94)}
+body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted:#637780;--border:#d8e3e6;--accent:#159b78;--blue:#168aaa;--glow:rgba(21,155,120,.1);--header:rgba(242,246,247,.94)}
+#dashboard{padding-top:58px}#dashboard>.container{width:min(1320px,94%)}#dashboard .section-heading{max-width:none;text-align:left;margin:0 0 24px}#dashboard .section-heading h2{font-size:clamp(27px,4vw,38px)}
+#dashboard .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;box-shadow:0 8px 28px rgba(0,0,0,.1)}#dashboard .feature-card h2,#dashboard .feature-card h3{letter-spacing:-.35px}#dashboard .feature-card p{line-height:1.65}
+#dashboard .dashboard-tab{border:1px solid transparent;border-radius:9px;padding:10px 14px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;transition:.18s ease}
+#dashboard .dashboard-tab:hover,#dashboard .dashboard-tab.active{color:var(--accent);background:rgba(54,214,164,.09);border-color:rgba(54,214,164,.22)}
+#dashboard .dashboard-panel{min-height:180px;scroll-margin-top:100px}#dashboard .dashboard-panel>h2{font-size:20px}
+#dashboard input,#dashboard select,#dashboard textarea{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:11px 12px}
+#dashboard input:focus,#dashboard select:focus{outline:2px solid rgba(54,214,164,.28);border-color:var(--accent)}
+#dashboard .btn{border-radius:9px;background:var(--surface2);border:1px solid var(--border);color:var(--text);box-shadow:none}
+#dashboard .btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+#dashboard #upload-button,#dashboard #google-login-dashboard{background:var(--accent);color:#07140f;border-color:var(--accent)}
+#dashboard #console-output{background:#080d12!important;color:#9ce8c9!important;border:1px solid #253b37;border-radius:10px;min-height:220px;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace}
+#dashboard #bot-list>.feature-card{background:var(--surface2)}#dashboard .preview-stat{background:var(--surface2);border:1px solid var(--border)}#dashboard .preview-stat strong{font-size:18px}
+#dashboard .dashboard-panel label{display:block;margin-top:13px;color:var(--muted);font-size:12px;font-weight:700}#dashboard .dashboard-panel [role=status]{color:var(--accent)}
+@media(min-width:900px){#dashboard .dashboard-panel{padding:26px}#dashboard .dashboard-tab{min-width:88px}}
+@media(max-width:650px){#dashboard .section-heading{margin-bottom:18px}#dashboard .feature-card{padding:19px}#dashboard .dashboard-tab{padding:9px 11px}#dashboard #console-output{min-height:190px;font-size:11px}}
+
 </style>
 </head>
 
@@ -948,8 +967,8 @@ a {
   <div class="container">
     <div class="section-heading">
       <span class="eyebrow">CONTROL CENTER</span>
-      <h2>Your Hosting Dashboard</h2>
-      <p>Manage your Discord bot projects.</p>
+      <h2>Hosting <span class="gradient-text">Control Panel</span></h2>
+      <p>Manage your projects, files and hosting account from one control panel.</p>
     </div>
 
     <div class="feature-card">
@@ -982,7 +1001,7 @@ a {
 
     <!-- DASHBOARD MENU -->
     <div class="feature-card" style="margin-top:24px;">
-      <h3>Dashboard Menu</h3>
+      <h3>Control Panel Navigation</h3>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
         <button class="btn dashboard-tab" data-panel="overview-panel" type="button">Overview</button>
         <button class="btn dashboard-tab" data-panel="deployments-panel" type="button">Servers</button>
@@ -1040,19 +1059,19 @@ a {
 
     <!-- FUTURE FEATURES -->
     <div class="feature-card dashboard-panel" id="console-panel" style="margin-top:20px;display:none;">
-      <h2>Console</h2>
-      <p id="console-project-label">Select a project to view its runtime logs.</p>
+      <h2>Server Console</h2>
+      <p id="console-project-label">Select a project and use View Logs when a verified runtime is connected. Live terminal input is not available yet.</p>
       <pre id="console-output" style="white-space:pre-wrap;overflow:auto;max-height:360px;background:#080611;padding:16px;border-radius:12px;color:#cfc3ee;">No live console is connected yet.</pre>
     </div>
 
     <div class="feature-card dashboard-panel" id="variables-panel" style="margin-top:20px;display:none;">
       <h2>Environment Variables</h2>
-      <p>Secure environment-variable management is planned.</p>
+      <p>Environment-variable editing is not enabled yet. Do not put bot tokens or passwords in this panel.</p>
     </div>
 
     <div class="feature-card dashboard-panel" id="backups-panel" style="margin-top:20px;display:none;">
       <h2>Backups</h2>
-      <p>Project backup tools are planned.</p>
+      <p>Automated backups are not connected yet. Your current project archive can be downloaded from the Servers area.</p>
     </div>
 
     <div class="feature-card dashboard-panel" id="network-panel" style="margin-top:20px;display:none;">
@@ -1075,7 +1094,7 @@ a {
     </div>
     <div class="feature-card dashboard-panel" id="settings-panel" style="margin-top:20px;display:none;">
       <h2>Settings</h2>
-      <p>Account sign-in and project ownership are active. Server-specific settings will be enabled with the execution service.</p>
+      <p>Available now: account sign-in, project ownership, ZIP upload, download and delete. Server power controls remain locked until the secure execution service is deployed.</p>
       <p style="margin-top:12px;">Runtime: Node.js · ZIP upload limit: 25 MB · Project storage: private</p>
     </div>
   </div>
