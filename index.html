@@ -1733,6 +1733,37 @@ initializeDashboard();
 </section>
 <button class="ai-chat-launcher" id="aiChatLauncher" type="button" aria-label="Open AI assistant">✦</button>
 
+<script>
+// NEVERLOSE ERA AI CHAT TOGGLE FIX
+(() => {
+  const launcher = document.getElementById("aiChatLauncher");
+  const panel = document.getElementById("aiChatPanel");
+  const closeButton = document.getElementById("aiChatClose");
+  const input = document.getElementById("aiChatInput");
+
+  if (!launcher || !panel || !closeButton) return;
+
+  const setChatOpen = (open) => {
+    panel.classList.toggle("open", open);
+    panel.setAttribute("aria-hidden", String(!open));
+    launcher.setAttribute("aria-expanded", String(open));
+    launcher.setAttribute("aria-label", open ? "Close AI assistant" : "Open AI assistant");
+    if (open) window.setTimeout(() => input?.focus(), 50);
+  };
+
+  launcher.addEventListener("click", () => {
+    setChatOpen(!panel.classList.contains("open"));
+  });
+  closeButton.addEventListener("click", () => setChatOpen(false));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && panel.classList.contains("open")) {
+      setChatOpen(false);
+      launcher.focus();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
 
