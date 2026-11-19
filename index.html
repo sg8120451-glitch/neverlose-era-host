@@ -1725,10 +1725,10 @@ initializeDashboard();
   <div class="ai-chat-messages" id="aiChatMessages" aria-live="polite">
     <div class="ai-chat-msg assistant">Hi! I'm the NEVERLOSE ERA assistant. Ask me about accounts, bot uploads, plans, or using the dashboard.</div>
   </div>
-  <form class="ai-chat-form" id="aiChatForm">
-    <input class="ai-chat-input" id="aiChatInput" maxlength="2000" autocomplete="off" placeholder="Ask a question..." aria-label="Your question" required>
-    <button class="ai-chat-send" id="aiChatSend" type="submit">Send</button>
-  </form>
+  <div class="ai-chat-form" id="aiChatForm" role="form" aria-label="Ask the NEVERLOSE ERA assistant">
+    <input class="ai-chat-input" id="aiChatInput" maxlength="2000" autocomplete="off" placeholder="Ask a question..." aria-label="Your question">
+    <button class="ai-chat-send" id="aiChatSend" type="button">Send</button>
+  </div>
   <div class="ai-chat-note">AI can make mistakes. Never share passwords or private API keys.</div>
 </section>
 <button class="ai-chat-launcher" id="aiChatLauncher" type="button" aria-label="Open AI assistant">✦</button>
@@ -1762,7 +1762,7 @@ initializeDashboard();
     }
   });
 
-  // NEVERLOSE ERA AI CHAT SUBMIT HANDLER
+  // Send with explicit button/Enter handlers: no native form navigation or page reload.
   const form = document.getElementById("aiChatForm");
   const messagesBox = document.getElementById("aiChatMessages");
   const sendButton = document.getElementById("aiChatSend");
@@ -1777,12 +1777,15 @@ initializeDashboard();
     return bubble;
   };
 
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  const sendQuestion = async () => {
     const question = input?.value?.trim();
     if (!question || sendButton?.disabled) return;
 
-    // Keep the panel open while sending and while the AI is replying.
+    // Explicitly preserve the open state throughout the request.
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    launcher.setAttribute("aria-expanded", "true");
+
     addMessage("user", question);
     chatHistory.push({ role: "user", content: question });
     input.value = "";
@@ -1809,7 +1812,7 @@ initializeDashboard();
       pending.textContent = error.name === "TimeoutError"
         ? "The AI took too long to respond. Please try again."
         : (error.message || "Could not reach the AI assistant. Please try again.");
-      // Remove failed user message from request history so it can be retried.
+      // Keep the failed question visible, but don't send it as conversation history.
       chatHistory.pop();
     } finally {
       if (sendButton) {
@@ -1818,6 +1821,19 @@ initializeDashboard();
       }
       messagesBox.scrollTop = messagesBox.scrollHeight;
       if (panel.classList.contains("open")) input?.focus();
+    }
+  };
+
+  sendButton?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    sendQuestion();
+  });
+  input?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      sendQuestion();
     }
   });
 })();
