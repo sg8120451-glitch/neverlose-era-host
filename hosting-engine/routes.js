@@ -217,4 +217,71 @@ export default async function routes(app) {
       };
     }
   );
+  
+  // Public AI support endpoint. The provider key is read only from server env.
+  app.post(
+    "/api/ai-chat",
+    {
+      config: { rateLimit: { max: 8, timeWindow: "1 minute" } },
+      bodyLimit: 12000
+    },
+    async (request, reply) => {
+      const apiKey = process.env.OPENAI_API_KEY;
+      if (!apiKey) {
+        return reply.code(503).send({ error: "AI support is being configured. Please contact Discord support for now." });
+      }
+
+      const incoming = request.body?.messages;
+      if (!Array.isArray(incoming) || incoming.length < 1 || incoming.length > 12) {
+        return reply.code(400).send({ error: "Please send a valid chat message." });
+      }
+
+      const messages = [];
+      for (const item of incoming) {
+        if (!item || !["user", "assistant"].includes(item.role) ||
+            typeof item.content !== "string" || !item.content.trim() ||
+            item.content.length > 2000) {
+          return reply.code(400).send({ error: "A chat message is invalid or too long." });
+        }
+        messages.push({ role: item.role, content: item.content.trim() });
+      }
+      if (messages[messages.length - 1].role !== "user") {
+        return reply.code(400).send({ error: "The latest message must be a question." });
+      }
+
+      try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + apiKey,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+            messages: [
+              {
+                role: "system",
+                content: "You are the NEVERLOSE ERA website support assistant. Help visitors understand this Discord bot hosting platform, its account and Google sign-in flow, dashboard, Node.js bot project ZIP uploads, private storage, plans, and support options. Be friendly, concise, and honest. Do not claim a feature is available unless confirmed by the visitor's information or the platform description. The site currently supports account sign-in, project ownership, ZIP upload, download and delete; secure bot execution may not yet be enabled. For account-specific or billing issues, direct the visitor to the official Discord support invite https://discord.gg/z9ty5674ss. Never request passwords, OAuth codes, bot tokens, API keys, or other secrets. Do not claim you can access accounts, change settings, or deploy bots. If unsure, say so and point to Discord support."
+              },
+              ...messages
+            ],
+            temperature: 0.4,
+            max_tokens: 500
+          }),
+          signal: AbortSignal.timeout(20000)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          request.log.error({ status: response.status, providerError: result.error?.type || result.error?.code }, "AI provider request failed");
+          return reply.code(502).send({ error: "The AI assistant could not answer right now. Please try again later." });
+        }
+        const answer = result.choices?.[0]?.message?.content?.trim();
+        if (!answer) return reply.code(502).send({ error: "The AI assistant returned an empty answer. Please try again." });
+        return { success: true, answer };
+      } catch (error) {
+        request.log.error({ err: error }, "AI support request failed");
+        return reply.code(502).send({ error: "Could not connect to the AI assistant. Please try again later." });
+      }
+    }
+  );
 }
