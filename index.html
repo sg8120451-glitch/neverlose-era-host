@@ -716,7 +716,7 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
 #dashboard #console-output{background:#080d12!important;color:#9ce8c9!important;border:1px solid #253b37;border-radius:10px;min-height:220px;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace}
 #dashboard #bot-list>.feature-card{background:var(--surface2)}#dashboard .preview-stat{background:var(--surface2);border:1px solid var(--border)}#dashboard .preview-stat strong{font-size:18px}
 #dashboard .dashboard-panel label{display:block;margin-top:13px;color:var(--muted);font-size:12px;font-weight:700}#dashboard .dashboard-panel [role=status]{color:var(--accent)}
-.account-menu-wrap{position:relative}.account-menu{position:absolute;right:0;top:48px;width:220px;padding:7px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 45px rgba(0,0,0,.3);z-index:300}.account-menu[hidden]{display:none}.account-menu-link{display:flex;align-items:center;gap:9px;width:100%;padding:11px 12px;border:0;border-radius:8px;background:transparent;color:var(--text);font-weight:700;font-size:13px;text-decoration:none}.account-menu-link:hover,.account-menu-link:focus-visible{background:var(--surface2);color:var(--accent);outline:none}.account-menu-wrap:focus-within #accountMenuToggle{border-color:var(--accent)}#profile-avatar-preview[src=""]{visibility:hidden}
+#profile-avatar-preview[src=""]{visibility:hidden}
 @media(min-width:900px){#dashboard .dashboard-panel{padding:26px}#dashboard .dashboard-tab{min-width:88px}}
 @media(max-width:650px){#dashboard .section-heading{margin-bottom:18px}#dashboard .feature-card{padding:19px}#dashboard .dashboard-tab{padding:9px 11px}#dashboard #console-output{min-height:190px;font-size:11px}}
 
@@ -743,16 +743,12 @@ body.light{--bg:#f2f6f7;--surface:#fff;--surface2:#edf3f4;--text:#17252c;--muted
       <button type="button" class="nav-menu-action" id="menuSettings">⚙ Account Settings</button>
       <button type="button" class="nav-menu-action" id="menuTheme">◐ Change Theme</button>
       <button type="button" class="nav-menu-action" id="menuSignOut" hidden>↪ Sign Out</button>
+      <a href="https://discord.gg/z9ty5674ss" target="_blank" rel="noopener noreferrer" class="nav-menu-action">◉ Support · Discord</a>
     </nav>
 
     <div class="nav-actions">
       <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle theme">☀</button>
-      <div class="account-menu-wrap">
-        <button class="theme-btn" id="accountMenuToggle" type="button" aria-label="More options" aria-haspopup="true" aria-expanded="false" aria-controls="accountMenu">⋮</button>
-        <div class="account-menu" id="accountMenu" role="menu" hidden>
-          <a href="https://discord.gg/z9ty5674ss" target="_blank" rel="noopener noreferrer" role="menuitem" class="account-menu-link">◉ Support · Discord</a>
-        </div>
-      </div>
+
       <button class="btn btn-primary" id="navLoginBtn" type="button">Login / Sign Up</button>
       <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">☰</button>
     </div>
@@ -1486,33 +1482,6 @@ async function saveProfile() {
   } finally { button.disabled = false; }
 }
 document.getElementById("save-profile-button")?.addEventListener("click", saveProfile);
-
-// THREE-DOT MENU: SUPPORT LINK
-const accountMenuToggle = document.getElementById("accountMenuToggle");
-const accountMenu = document.getElementById("accountMenu");
-accountMenuToggle?.addEventListener("click", () => {
-  if (!accountMenu) return;
-  const willOpen = accountMenu.hidden;
-  accountMenu.hidden = !willOpen;
-  accountMenuToggle.setAttribute("aria-expanded", String(willOpen));
-});
-document.addEventListener("click", event => {
-  if (!event.target.closest(".account-menu-wrap") && accountMenu && accountMenuToggle) {
-    accountMenu.hidden = true;
-    accountMenuToggle.setAttribute("aria-expanded", "false");
-  }
-});
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && accountMenu && accountMenuToggle) {
-    accountMenu.hidden = true;
-    accountMenuToggle.setAttribute("aria-expanded", "false");
-    accountMenuToggle.focus();
-  }
-});
-accountMenu?.querySelector("a")?.addEventListener("click", () => {
-  accountMenu.hidden = true;
-  accountMenuToggle?.setAttribute("aria-expanded", "false");
-});
 
 // HEADER ACCOUNT BUTTON
 document.getElementById("navLoginBtn")?.addEventListener("click", () => {
