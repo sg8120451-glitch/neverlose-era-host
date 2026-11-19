@@ -1761,6 +1761,65 @@ initializeDashboard();
       launcher.focus();
     }
   });
+
+  // NEVERLOSE ERA AI CHAT SUBMIT HANDLER
+  const form = document.getElementById("aiChatForm");
+  const messagesBox = document.getElementById("aiChatMessages");
+  const sendButton = document.getElementById("aiChatSend");
+  const chatHistory = [];
+
+  const addMessage = (role, content) => {
+    const bubble = document.createElement("div");
+    bubble.className = "ai-chat-msg " + (role === "user" ? "user" : "assistant");
+    bubble.textContent = content;
+    messagesBox.appendChild(bubble);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+    return bubble;
+  };
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const question = input?.value?.trim();
+    if (!question || sendButton?.disabled) return;
+
+    // Keep the panel open while sending and while the AI is replying.
+    addMessage("user", question);
+    chatHistory.push({ role: "user", content: question });
+    input.value = "";
+    if (sendButton) {
+      sendButton.disabled = true;
+      sendButton.textContent = "Sending…";
+    }
+    const pending = addMessage("assistant", "Thinking…");
+
+    try {
+      const response = await fetch(HOSTING_API + "/api/ai-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: chatHistory.slice(-12) }),
+        signal: AbortSignal.timeout(25000)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.answer) {
+        throw new Error(result.error || "The AI assistant is temporarily unavailable.");
+      }
+      pending.textContent = result.answer;
+      chatHistory.push({ role: "assistant", content: result.answer });
+    } catch (error) {
+      pending.textContent = error.name === "TimeoutError"
+        ? "The AI took too long to respond. Please try again."
+        : (error.message || "Could not reach the AI assistant. Please try again.");
+      // Remove failed user message from request history so it can be retried.
+      chatHistory.pop();
+    } finally {
+      if (sendButton) {
+        sendButton.disabled = false;
+        sendButton.textContent = "Send";
+      }
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+      if (panel.classList.contains("open")) input?.focus();
+    }
+  });
 })();
 </script>
 
