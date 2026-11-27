@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "theugdashboard",
+  "compatibility_date": "2026-11-28",
+  "assets": {
+    "directory": "."
+  },
+  "previews": {}
+}
