@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0718"><title>NEVERLOSE ERA | Bot Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0b0718;--panel:#130e25;--panel2:#1b1432;--line:#30234c;--txt:#f7f4ff;--muted:#aaa0c2;--accent:#a879ff;--good:#35d69a;--bad:#ff6480}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px Inter,system-ui,sans-serif}button,select,input,textarea{font:inherit}button{cursor:pointer}.top{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#0e0920;position:sticky;top:0;z-index:5}.brand{font-weight:800;font-size:18px;letter-spacing:.3px}.brand span{color:var(--accent)}.top-actions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--txt);padding:10px 14px;border-radius:10px;font-weight:700}.btn.primary{background:linear-gradient(110deg,#8c5ce6,#557eff);border:0}.btn:disabled{opacity:.5;cursor:not-allowed}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:calc(100vh - 70px)}aside{padding:22px 14px;border-right:1px solid var(--line);background:#100b20}.side-label{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1.5px;padding:12px 12px 7px}.nav{width:100%;text-align:left;padding:11px 12px;border:0;background:transparent;color:var(--muted);border-radius:9px;margin:2px 0;font-weight:600}.nav.active,.nav:hover{background:var(--panel2);color:var(--txt)}main{padding:30px;max-width:1200px;width:100%;margin:auto}.head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px}.head h1{font-size:25px;margin:0}.muted{color:var(--muted)}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}.row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 0;border-bottom:1px solid #2a2041}.row:last-child{border:0}.row strong{display:block}.row small{color:var(--muted);display:block;margin-top:4px}.switch{appearance:none;width:42px;height:24px;border-radius:20px;background:#493d60;position:relative;flex:none;cursor:pointer}.switch:checked{background:#8c5ce6}.switch:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:.15s}.switch:checked:before{left:21px}.field{display:grid;gap:7px;margin:14px 0}.field label{font-weight:700}.field input,.field textarea,.field select,select{width:100%;background:#0e0920;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:11px}.field textarea{min-height:90px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.status{font-size:12px;color:var(--muted);min-height:18px}.status.good{color:var(--good)}.status.bad{color:var(--bad)}.hidden{display:none!important}.empty{text-align:center;padding:65px 20px}.empty h2{margin:0 0 10px}.pill{background:#21183a;color:#c8aaff;padding:5px 9px;border-radius:30px;font-size:11px;font-weight:700}.server-select{min-width:230px;max-width:100%}.section-title{margin:0 0 6px;font-size:18px}.notice{border:1px solid #574326;background:#261d12;color:#f4d59b;padding:12px 14px;border-radius:10px;line-height:1.6;margin-bottom:16px}.cmd-group{margin-top:12px}.footer{font-size:11px;color:var(--muted);margin-top:30px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:5px;overflow:auto;padding:10px}.side-label{display:none}.nav{white-space:nowrap;width:auto;padding:10px}.layout aside{position:sticky;top:70px;z-index:4}.grid{grid-template-columns:1fr}main{padding:18px}.top{padding:0 14px}.brand{font-size:15px}}
+</style></head>
+<body>
+<header class="top"><a class="brand" href="/">NEVERLOSE <span>ERA</span> <span class="pill">BOT DASHBOARD</span></a><div class="top-actions"><span id="user-label" class="muted"></span><button id="login" class="btn primary">Login with Discord</button><button id="logout" class="btn hidden">Logout</button></div></header>
+<div id="signed-out" class="empty"><h2>Manage your Discord server</h2><p class="muted">Sign in with Discord to select a server and configure THE UG.</p><button class="btn primary" id="login-big">Continue with Discord</button><p class="status" id="auth-status"></p></div>
+<div id="app" class="layout hidden">
+<aside><div class="side-label">SERVER</div><select id="guild-select" class="server-select" aria-label="Choose a Discord server"><option value="">Choose server…</option></select><div class="side-label">CONFIGURATION</div>
+<button class="nav active" data-page="overview">▦ Overview</button><button class="nav" data-page="commands">⌘ Commands</button><button class="nav" data-page="moderation">⚒ Moderation</button><button class="nav" data-page="automod">◈ AutoMod</button><button class="nav" data-page="antinuke">◉ AntiNuke</button><button class="nav" data-page="welcome">✉ Welcome</button><button class="nav" data-page="autorole">♙ AutoRole</button><button class="nav" data-page="logs">☷ Logging</button><button class="nav" data-page="tickets">▤ Tickets</button><button class="nav" data-page="giveaways">✧ Giveaways</button>
+</aside>
+<main><div class="head"><div><h1 id="page-title">Server overview</h1><div class="muted" id="guild-caption">Choose a server to get started.</div></div><button class="btn primary" id="save">Save changes</button></div>
+<div class="notice">Dashboard preview: settings are saved to your account database. THE UG must be connected to this configuration database before changes affect live bot commands. Never paste your Discord bot token here.</div>
+<div id="no-guild" class="card empty"><h2>Select a server</h2><p class="muted">Choose a server where you have Manage Server or Administrator permission.</p></div>
+<div id="content" class="hidden"></div><p id="save-status" class="status"></p><div class="footer">NEVERLOSE ERA · Server settings are private to your signed-in account.</div></main></div>
+<script>
+const SUPABASE_URL="https://tntpedvbxyhoutzxznlw.supabase.co";
+const SUPABASE_PUBLIC_KEY="sb_publishable_WPvtzp4Ji2A854bwY2adcQ_tHnL4ggE";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY);
+const $=id=>document.getElementById(id);
+let user=null,providerToken=null,guilds=[],guildId="",settings={},page="overview";
+const catalog={
+commands:{title:"Commands",desc:"Turn command groups on or off for this server.",items:["help","ping","userinfo","serverinfo","avatar","banner","roleinfo","channelinfo","moderation","timeout","untimeout","kick","ban","unban","purge","warn","warnings","lock","unlock","slowmode","giveaway","ticket","welcome","autorole","antinuke"]},
+moderation:{title:"Moderation",desc:"Configure moderation command availability.",items:["timeout","untimeout","kick","ban","unban","warn","warnings","purge","lock","unlock","slowmode"]},
+automod:{title:"AutoMod",desc:"Choose which automatic protections THE UG should enforce.",items:["Anti spam","Bad words filter","Invite links filter","Mass mentions","Repeated messages","Caps filter"]},
+antinuke:{title:"AntiNuke",desc:"Configure anti-nuke detection options. Punishment behavior must also be implemented in the bot.",items:["Channel delete detection","Role delete detection","Ban detection","Kick detection","Webhook creation detection","Bot add detection"]},
+welcome:{title:"Welcome messages",desc:"Configure the welcome message template.",fields:[["enabled","Enable welcome messages","toggle"],["channel_id","Welcome channel ID","text"],["message","Welcome message","textarea"]]},
+autorole:{title:"AutoRole",desc:"Give a configured role to new members.",fields:[["enabled","Enable AutoRole","toggle"],["role_id","Role ID to assign","text"]]},
+logs:{title:"Logging",desc:"Choose where server events should be sent.",fields:[["enabled","Enable server logs","toggle"],["channel_id","Log channel ID","text"],["member_logs","Member join/leave logs","toggle"],["message_logs","Message edit/delete logs","toggle"],["moderation_logs","Moderation logs","toggle"],["voice_logs","Voice state logs","toggle"]]},
+tickets:{title:"Tickets",desc:"Configure the ticket system.",fields:[["enabled","Enable tickets","toggle"],["channel_id","Ticket panel channel ID","text"],["category_id","Ticket category ID","text"],["staff_role_id","Support staff role ID","text"],["panel_message","Panel message","textarea"]]},
+giveaways:{title:"Giveaways",desc:"Set default giveaway behavior.",fields:[["enabled","Allow giveaway commands","toggle"],["host_role_id","Giveaway host role ID","text"],["default_duration","Default duration (e.g. 1h)","text"]]}
+};
+function key(){return "guild:"+guildId+":"+page}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function val(k,d){return settings[k]===undefined?d:settings[k]}
+function setStatus(t,kind=""){ $("save-status").textContent=t;$("save-status").className="status "+kind}
+function render(){
+$("page-title").textContent=page==="overview"?"Server overview":catalog[page]?.title||page;
+$("guild-caption").textContent=guilds.find(g=>g.id===guildId)?.name||"Choose a server";
+if(!guildId){$("no-guild").classList.remove("hidden");$("content").classList.add("hidden");return}
+$("no-guild").classList.add("hidden");$("content").classList.remove("hidden");
+if(page==="overview"){
+$("content").innerHTML='<div class="grid"><div class="card"><div class="muted">Selected server</div><h2>'+esc(guilds.find(g=>g.id===guildId)?.name)+'</h2><span class="pill">Connected to dashboard</span></div><div class="card"><div class="muted">Configuration status</div><h2>Saved settings</h2><p class="muted">Bot sync pending integration</p></div></div><div class="card"><h3 class="section-title">Quick start</h3><p class="muted">Choose a category on the left, change its settings, then press Save changes. Add THE UG to this server and ensure it has the required permissions.</p></div>';
+return}
+const group=catalog[page];if(!group)return;
+let html='<div class="card"><h2 class="section-title">'+esc(group.title)+'</h2><p class="muted">'+esc(group.desc)+'</p>';
+if(group.items){html+='<div class="cmd-group">';group.items.forEach((item,i)=>{const k=page+"_"+item.toLowerCase().replace(/[^a-z0-9]+/g,"_");html+='<div class="row"><div><strong>'+esc(item)+'</strong><small>Enable or disable '+esc(item)+'</small></div><input class="switch setting" type="checkbox" data-key="'+k+'" '+(val(k,true)?"checked":"")+'></div>'});html+='</div>'}
+if(group.fields){group.fields.forEach(([k,label,type])=>{const v=val(k,type==="toggle"?false:"");html+='<div class="field"><label>'+esc(label)+'</label>';if(type==="toggle")html+='<input class="switch setting" type="checkbox" data-key="'+k+'" '+(v?"checked":"")+'>';else if(type==="textarea")html+='<textarea class="setting" data-key="'+k+'">'+esc(v)+'</textarea>';else html+='<input class="setting" data-key="'+k+'" value="'+esc(v)+'" placeholder="Enter '+esc(label.toLowerCase())+'">';html+='</div>'})}
+html+='</div>';$("content").innerHTML=html;
+}
+function collect(){document.querySelectorAll(".setting").forEach(el=>{settings[el.dataset.key]=el.type==="checkbox"?el.checked:el.value})}
+async function loadSettings(){if(!guildId)return;setStatus("Loading settings…");const {data,error}=await sb.from("bot_guild_settings").select("settings").eq("guild_id",guildId).eq("user_id",user.id).maybeSingle();if(error){setStatus("Database setup required: "+error.message,"bad");settings={};render();return}settings=data?.settings||{};render();setStatus("Settings loaded.","good")}
+async function saveSettings(){if(!guildId)return;collect();$("save").disabled=true;setStatus("Saving…");const row={guild_id:guildId,user_id:user.id,settings,updated_at:new Date().toISOString()};const {error}=await sb.from("bot_guild_settings").upsert(row,{onConflict:"guild_id,user_id"});$("save").disabled=false;if(error){setStatus("Save failed: "+error.message,"bad");return}setStatus("Saved to dashboard database. Live bot sync still needs bot-side integration.","good")}
+async function loadGuilds(){
+if(!providerToken)throw new Error("Discord login token is missing. Sign out and sign in again.");
+const r=await fetch("https://discord.com/api/users/@me/guilds",{headers:{Authorization:"Bearer "+providerToken}});
+if(!r.ok)throw new Error("Discord could not return your servers. Please sign out and sign in again.");
+const all=await r.json();guilds=all.filter(g=>{const p=BigInt(g.permissions||"0");return (p&8n)===8n||(p&32n)===32n});
+$("guild-select").innerHTML='<option value="">Choose server…</option>'+guilds.map(g=>'<option value="'+esc(g.id)+'">'+esc(g.name)+'</option>').join("");
+if(!guilds.length)setStatus("No servers with Manage Server or Administrator permission were found.","bad");
+}
+async function start(){
+const {data}=await sb.auth.getSession();const session=data.session;user=session?.user||null;providerToken=session?.provider_token||null;
+if(!user){$("signed-out").classList.remove("hidden");$("app").classList.add("hidden");$("login").classList.remove("hidden");$("logout").classList.add("hidden");return}
+$("signed-out").classList.add("hidden");$("app").classList.remove("hidden");$("login").classList.add("hidden");$("logout").classList.remove("hidden");$("user-label").textContent=user.user_metadata?.full_name||user.email||"Signed in";
+try{await loadGuilds()}catch(e){setStatus(e.message,"bad")}
+}
+async function login(){setStatus("Redirecting to Discord…");const {error}=await sb.auth.signInWithOAuth({provider:"discord",options:{scopes:"identify guilds",redirectTo:location.href}});if(error)setStatus(error.message,"bad")}
+$("login").onclick=login;$("login-big").onclick=login;
+$("logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
+$("guild-select").onchange=async e=>{guildId=e.target.value;await loadSettings()};
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{collect();page=b.dataset.page;document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n===b));render()});
+$("save").onclick=saveSettings;
+sb.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;providerToken=session?.provider_token||null;if(!session)location.reload()});
+start();
+</script></body></html>
