@@ -57,7 +57,7 @@ if(group.fields){group.fields.forEach(([k,label,type])=>{const v=val(k,type==="t
 html+='</div>';$("content").innerHTML=html;
 }
 function collect(){document.querySelectorAll(".setting").forEach(el=>{settings[el.dataset.key]=el.type==="checkbox"?el.checked:el.value})}
-async function loadSettings(){if(!guildId)return;setStatus("Loading settings…");const {data,error}=await sb.from("bot_guild_settings").select("settings").eq("guild_id",guildId).maybeSingle();if(error){setStatus("Database setup required: "+error.message,"bad");settings={};render();return}settings=data?.settings||{};render();setStatus("Settings loaded.","good")}
+async function loadSettings(){if(!guildId)return;setStatus("Loading settings…");const {data,error}=await sb.from("bot_guild_settings").select("settings").eq("guild_id",guildId).eq("user_id",user.id).maybeSingle();if(error){setStatus("Database setup required: "+error.message,"bad");settings={};render();return}settings=data?.settings||{};render();setStatus("Settings loaded.","good")}
 async function saveSettings(){if(!guildId)return;collect();$("save").disabled=true;setStatus("Saving…");const row={guild_id:guildId,user_id:user.id,settings,updated_at:new Date().toISOString()};const {error}=await sb.from("bot_guild_settings").upsert(row,{onConflict:"guild_id,user_id"});$("save").disabled=false;if(error){setStatus("Save failed: "+error.message,"bad");return}setStatus("Saved to dashboard database. Live bot sync still needs bot-side integration.","good")}
 async function loadGuilds(){
 if(!providerToken)throw new Error("Discord login token is missing. Sign out and sign in again.");
